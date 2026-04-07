@@ -5,6 +5,7 @@ Next.js project initialized in this repository with App Router, ESLint, and Tail
 ## Stack
 
 - Next.js
+- TypeScript
 - React
 - Tailwind CSS
 - ESLint
