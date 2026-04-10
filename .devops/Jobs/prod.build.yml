@@ -1,0 +1,39 @@
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "24.x"
+    displayName: "Install Node.js 24.x"
+
+  - script: |
+      npm install -g npm@11
+    displayName: "Install npm 11"
+
+  - script: |
+      npm ci
+    displayName: "npm ci (clean install)"
+
+  - script: |
+      npm run build
+    displayName: "Build Next.js application"
+
+  - script: |
+      npm ci --omit=dev
+    displayName: "Prune dev dependencies"
+
+  - task: ArchiveFiles@2
+    displayName: "Archive project for deployment"
+    inputs:
+      rootFolderOrFile: "$(Build.SourcesDirectory)"
+      includeRootFolder: false
+      archiveType: "zip"
+      archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+      ignorePattern: |
+        .git
+        .gitignore
+        .env
+        .next/.cache
+        coverage
+        **/.DS_Store
+
+  - upload: $(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip
+    artifact: drop-prod

@@ -1,0 +1,21 @@
+steps:
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      artifactName: "drop-uat"
+      targetPath: "$(Pipeline.Workspace)/drop-uat"
+
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: "$(Pipeline.Workspace)/drop-uat/build*.zip"
+      destinationFolder: "$(Pipeline.Workspace)/extracted"
+      cleanDestinationFolder: true
+
+  - task: AzureWebApp@1
+    displayName: "Deploy to App Service"
+    inputs:
+      azureSubscription: "$(azureSubscription)"
+      appType: "webAppLinux"
+      appName: "$(appServiceName)"
+      package: "$(Pipeline.Workspace)/extracted"
+      runtimeStack: "NODE|24"
+      startupCommand: "npm start"

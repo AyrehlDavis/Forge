@@ -1,0 +1,107 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - dev
+      - prod
+      - uat
+  paths:
+    exclude:
+      - seeds/*
+
+variables:
+  - name: vmImage
+    value: "ubuntu-latest"
+
+stages:
+  - stage: BuildForDEV
+    condition: contains(variables['Build.SourceBranch'], 'refs/heads/dev')
+    displayName: DEV BUILD
+    variables:
+      - template: Variables/dev.yml
+    jobs:
+      - job: BuildJobDEV
+        pool:
+          vmImage: $(vmImage)
+        steps:
+          - template: Jobs/dev.build.yml
+
+  - stage: DeployForDEV
+    dependsOn: BuildForDEV
+    condition: succeeded('BuildForDEV')
+    variables:
+      - template: Variables/dev.yml
+    jobs:
+      - deployment: DeploymentJobDEV
+        pool:
+          vmImage: $(vmImage)
+        environment: dev
+        variables:
+          - template: Variables/dev.yml
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: Jobs/dev.deploy.yml
+
+  - stage: BuildForPROD
+    dependsOn: [] # no dependencies
+    condition: contains(variables['Build.SourceBranch'], 'refs/heads/prod')
+    displayName: PROD BUILD
+    variables:
+      - template: Variables/prod.yml
+    jobs:
+      - job: BuildJobPROD
+        pool:
+          vmImage: $(vmImage)
+        steps:
+          - template: Jobs/prod.build.yml
+
+  - stage: DeployForPROD
+    dependsOn: BuildForPROD
+    condition: succeeded('BuildForPROD')
+    variables:
+      - template: Variables/prod.yml
+    jobs:
+      - deployment: DeploymentJobPROD
+        pool:
+          vmImage: $(vmImage)
+        environment: prod
+        variables:
+          - template: Variables/prod.yml
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: Jobs/prod.deploy.yml
+
+  - stage: BuildForUAT
+    dependsOn: [] # no dependencies
+    condition: contains(variables['Build.SourceBranch'], 'refs/heads/uat')
+    displayName: UAT BUILD
+    variables:
+      - template: Variables/uat.yml
+    jobs:
+      - job: BuildJobUAT
+        pool:
+          vmImage: $(vmImage)
+        steps:
+          - template: Jobs/uat.build.yml
+
+  - stage: DeployForUAT
+    dependsOn: BuildForUAT
+    condition: succeeded('BuildForUAT')
+    variables:
+      - template: Variables/uat.yml
+    jobs:
+      - deployment: DeploymentJobUAT
+        pool:
+          vmImage: $(vmImage)
+        environment: uat
+        variables:
+          - template: Variables/uat.yml
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: Jobs/uat.deploy.yml

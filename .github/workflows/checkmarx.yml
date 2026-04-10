@@ -1,0 +1,21 @@
+name: Checkmarx One Scan
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - main
+      - prod
+      - qa
+      - sandbox
+      - test
+      - uat
+  schedule:
+    - cron: '0 0 1 * *'
+
+jobs:
+  call-checkmarx-scan:
+    uses: ProjectAquariusOrg/ci-cd/.github/workflows/checkmarx.yml@main
+    secrets:
+      CX_CLIENT_ID: ${{ secrets.CX_CLIENT_ID }}
+      CX_CLIENT_SECRET: ${{ secrets.CX_CLIENT_SECRET }}

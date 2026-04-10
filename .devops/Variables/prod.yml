@@ -1,0 +1,9 @@
+variables:
+  - name: ENV
+    value: prod
+  - name: azureSubscription
+    value: "TODO_AZURE_SERVICE_CONNECTION"
+  - name: appServiceName
+    value: "TODO_PROD_APP_SERVICE_NAME"
+  - name: resourceGroup
+    value: "TODO_PROD_RESOURCE_GROUP"
