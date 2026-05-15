@@ -1,8 +1,67 @@
-@import "tailwindcss";
+/* Constrain Tailwind v4 automatic source detection to the app/ directory only.
+   Without this, Turbopack panics on the _bmad symlink at the repo root
+   (it resolves outside the project root). The `source(...)` directive on the
+   @import sets the base for Tailwind's content scan — this is the documented
+   v4 way to limit source detection, not a separate @source rule. */
+@import "tailwindcss" source("../app");
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Arise Energy brand palette — anchored at arise-600 = #007fe8
+     (primary blue extracted from ariseenergy.com). Hue ≈ 207°, saturated
+     mid-tone. arise-700 (#006bc5) clears WCAG AA on white (5.7:1). */
+  --arise-900: #003c72;
+  --arise-800: #00549c;
+  --arise-700: #006bc5;
+  --arise-600: #007fe8;
+  --arise-500: #1c8aef;
+  --arise-400: #4ea3f3;
+  --arise-300: #80bff7;
+  --arise-200: #b3d4fa;
+  --arise-100: #d8e9fc;
+  --arise-50: #ebf3fd;
+
+  /* V2 — electric accent (dark-mode brand transposition).
+     Updated to ariseenergy.com cyan accent. */
+  --arise-electric: #25d5f3;
+
+  /* V2 — Apple/Nike light-mode posture. Warm off-white base, Arise teal accent
+     used sparingly, glass surfaces with subtle frosted-blur. */
+  --v2-background: #f5f3ee;          /* Warm off-white base (a touch warmer than pure white) */
+  --v2-foreground: #0a1f1f;
+  --v2-surface-primary: rgba(255, 255, 255, 0.72);  /* Glass card primary */
+  --v2-surface-elevated: rgba(255, 255, 255, 0.88); /* Hero result glass */
+  --v2-surface-subtle: rgba(255, 255, 255, 0.4);    /* Quiet glass (sidebar) */
+  --v2-surface-solid: #ffffff;                       /* When opacity not wanted */
+  --v2-border-default: rgba(10, 31, 31, 0.08);
+  --v2-border-subtle: rgba(10, 31, 31, 0.04);
+  --v2-border-glass: rgba(255, 255, 255, 0.7);       /* Glass card highlight border */
+  --v2-text-primary: #0a1f1f;
+  --v2-text-secondary: #475569;
+  --v2-text-tertiary: #94a3b8;
+  --v2-accent: var(--arise-700);
+  --v2-accent-hover: var(--arise-800);
+  --v2-accent-soft: rgba(0, 107, 197, 0.08);        /* For tints */
+
+  /* V2 — secondary accents. Aligned to Tailwind cyan-* and violet-* palette
+     so V1 (which uses Tailwind classes) and V2 (which uses these vars) render
+     identical pixel colors. Teal stays primary.
+     - Cyan (warm): Tailwind cyan palette — Track B / Go Direct
+     - Violet (cool): Tailwind violet palette — Track C / Hybrid */
+  --v2-accent-warm: #06b6d4;             /* Tailwind cyan-500 */
+  --v2-accent-warm-soft: rgba(6, 182, 212, 0.10);
+  --v2-accent-warm-50: #ecfeff;          /* Tailwind cyan-50 */
+  --v2-accent-warm-fg: #0e7490;          /* Tailwind cyan-700 */
+
+  --v2-accent-cool: #7c3aed;             /* Tailwind violet-600 */
+  --v2-accent-cool-soft: rgba(124, 58, 237, 0.10);
+  --v2-accent-cool-50: #f5f3ff;          /* Tailwind violet-50 */
+  --v2-accent-cool-fg: #6d28d9;          /* Tailwind violet-700 */
+  --v2-shadow-soft: 0 1px 2px rgba(10, 31, 31, 0.04), 0 8px 24px rgba(10, 31, 31, 0.06);
+  --v2-shadow-card: 0 1px 2px rgba(10, 31, 31, 0.04), 0 4px 12px rgba(10, 31, 31, 0.05), 0 16px 40px rgba(10, 31, 31, 0.07);
+  --v2-shadow-hero: 0 2px 4px rgba(10, 31, 31, 0.04), 0 12px 32px rgba(10, 31, 31, 0.06), 0 32px 64px rgba(10, 31, 31, 0.08);
 }
 
 @theme inline {
@@ -10,17 +69,331 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Arise brand tokens */
+  --color-arise-900: var(--arise-900);
+  --color-arise-800: var(--arise-800);
+  --color-arise-700: var(--arise-700);
+  --color-arise-600: var(--arise-600);
+  --color-arise-500: var(--arise-500);
+  --color-arise-400: var(--arise-400);
+  --color-arise-300: var(--arise-300);
+  --color-arise-200: var(--arise-200);
+  --color-arise-100: var(--arise-100);
+  --color-arise-50: var(--arise-50);
+  --color-arise-electric: var(--arise-electric);
+
+  /* V2 light-mode tokens */
+  --color-v2-background: var(--v2-background);
+  --color-v2-surface-primary: var(--v2-surface-primary);
+  --color-v2-surface-elevated: var(--v2-surface-elevated);
+  --color-v2-surface-subtle: var(--v2-surface-subtle);
+  --color-v2-surface-solid: var(--v2-surface-solid);
+  --color-v2-border-default: var(--v2-border-default);
+  --color-v2-border-subtle: var(--v2-border-subtle);
+  --color-v2-border-glass: var(--v2-border-glass);
+  --color-v2-text-primary: var(--v2-text-primary);
+  --color-v2-text-secondary: var(--v2-text-secondary);
+  --color-v2-text-tertiary: var(--v2-text-tertiary);
+  --color-v2-accent: var(--v2-accent);
+  --color-v2-accent-hover: var(--v2-accent-hover);
+  --color-v2-accent-soft: var(--v2-accent-soft);
+  --color-v2-accent-warm: var(--v2-accent-warm);
+  --color-v2-accent-warm-soft: var(--v2-accent-warm-soft);
+  --color-v2-accent-warm-50: var(--v2-accent-warm-50);
+  --color-v2-accent-warm-fg: var(--v2-accent-warm-fg);
+  --color-v2-accent-cool: var(--v2-accent-cool);
+  --color-v2-accent-cool-soft: var(--v2-accent-cool-soft);
+  --color-v2-accent-cool-50: var(--v2-accent-cool-50);
+  --color-v2-accent-cool-fg: var(--v2-accent-cool-fg);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Light-only color scheme — the broker-decision prototype is not designed for
+   dark mode yet. Dark-mode support is a v2 design system concern. */
+html { color-scheme: light; }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Respect prefers-reduced-motion: disable all transitions, animations, and
+   smooth scrolling for users who prefer reduced motion. Required for WCAG
+   2.2 AA per SC 2.3.3 spirit and Apple HIG / Material guidance. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* V1 motion — check icon spring on card selection.
+   Overshoot to 1.15 before settling — reads as a small celebration. */
+@keyframes v1-check-pop {
+  0%   { opacity: 0; transform: scale(0.4); }
+  60%  { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.v1-check-pop { animation: v1-check-pop 280ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* V1 motion — cards cascade in on step mount.
+   Each card gets an animation-delay inline (60ms stagger). */
+@keyframes v1-card-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.v1-card-enter { animation: v1-card-enter 320ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* V1 motion — ambient orb gentle drift.
+   Slow position + scale oscillation; nearly imperceptible per frame, alive over time. */
+@keyframes v1-orb-drift {
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  33%      { transform: translate(-48%, -12px) scale(1.05); }
+  66%      { transform: translate(-52%, 8px) scale(0.98); }
+}
+.v1-orb-drift { animation: v1-orb-drift 22s ease-in-out infinite; }
+
+/* V1 motion — hero outcome chips gently float.
+   Each chip applies its own --rot (resting rotation) and --delay via inline
+   style; the keyframe oscillates around that resting rotation. */
+@keyframes v1-chip-float {
+  0%, 100% { transform: rotate(var(--rot, 0deg)) translateY(0); }
+  50%      { transform: rotate(calc(var(--rot, 0deg) + 0.5deg)) translateY(-8px); }
+}
+.v1-chip-float {
+  animation: v1-chip-float 5s ease-in-out infinite;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* V1 motion — hand-drawn highlight swipe behind a headline word.
+   Starts at scaleX(0) anchored to the left, expands to full width over 600ms.
+   The slight skew + transform-origin gives a marker-stroke feel. */
+@keyframes v1-highlight-sweep {
+  from { transform: scaleX(0) skewX(-3deg); }
+  to   { transform: scaleX(1) skewX(-3deg); }
+}
+.v1-highlight-sweep {
+  transform-origin: left center;
+  animation: v1-highlight-sweep 600ms cubic-bezier(0.65, 0, 0.35, 1) 400ms both;
+}
+
+/* V2 — Apple-grade reveals. Calm fade+rise, soft staggers. No "draw" effects. */
+@keyframes v2-fade-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes v2-fade-rise-lg {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-panel { animation: v2-fade-rise-lg 500ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.result-headline { animation: v2-fade-rise 400ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 100ms; }
+.stat-block { animation: v2-fade-rise 400ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 200ms; }
+.result-section { animation: v2-fade-rise 400ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 350ms; }
+.advisor-note { animation: v2-fade-rise 400ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 450ms; }
+.action-ladder { animation: v2-fade-rise 400ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 550ms; }
+
+/* V2 page background — pastel tri-color cloud: BLUE · CYAN · VIOLET.
+   Pastels aligned to Tailwind palette: blue-200, cyan-200, violet-200. */
+.v2-mesh {
+  background:
+    radial-gradient(ellipse 55% 50% at 8% 5%,   rgba(191, 219, 254, 0.85), transparent 70%),  /* blue-200 */
+    radial-gradient(ellipse 45% 40% at 90% 8%,  rgba(165, 243, 252, 0.85), transparent 68%),  /* cyan-200 */
+    radial-gradient(ellipse 55% 45% at 50% 50%, rgba(221, 214, 254, 0.68), transparent 72%),  /* violet-200 */
+    radial-gradient(ellipse 60% 55% at 12% 95%, rgba(191, 219, 254, 0.65), transparent 70%),  /* blue-200 */
+    radial-gradient(ellipse 55% 50% at 85% 100%, rgba(221, 214, 254, 0.62), transparent 70%), /* violet-200 */
+    linear-gradient(180deg, #fafbfd 0%, #f3f5fb 100%);
+}
+
+/* V2 card — DEFAULT is clean white glass so it doesn't compete with the
+   page bg or other tinted surfaces. SELECTED state earns the teal gradient
+   as a signal. */
+.v2-card-soft {
+  background: rgba(255, 255, 255, 0.78);
+}
+.v2-card-soft-selected {
+  background: linear-gradient(
+    160deg,
+    rgba(237, 250, 250, 0.95) 0%,
+    rgba(212, 243, 243, 0.92) 60%,
+    rgba(163, 230, 230, 0.75) 100%
+  );
+}
+
+/* Apple/Piqo-grade primary pill — translucent gradient with inner highlight
+   and soft outer glow. Not a solid black slab. */
+.v2-pill-primary {
+  background: linear-gradient(
+    180deg,
+    var(--v2-text-primary) 0%,
+    rgba(10, 31, 31, 0.92) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+    0 1px 2px rgba(10, 31, 31, 0.18),
+    0 8px 24px rgba(10, 31, 31, 0.16);
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.v2-pill-primary:hover:not(:disabled) {
+  background: linear-gradient(
+    180deg,
+    var(--v2-accent) 0%,
+    var(--v2-accent-hover) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+    0 1px 2px rgba(0, 107, 197, 0.2),
+    0 12px 32px rgba(0, 107, 197, 0.22);
+}
+.v2-pill-primary:disabled {
+  background: linear-gradient(180deg, #cbd5e1, #94a3b8);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Apple-style soft-accent pill — translucent teal gradient, subtle glow.
+   For secondary "branded" CTAs (the result page primary). */
+.v2-pill-accent {
+  background: linear-gradient(
+    180deg,
+    var(--arise-600) 0%,
+    var(--arise-800) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+    0 1px 2px rgba(0, 107, 197, 0.2),
+    0 8px 28px rgba(0, 107, 197, 0.28);
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.v2-pill-accent:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+    0 1px 2px rgba(0, 107, 197, 0.24),
+    0 12px 40px rgba(0, 107, 197, 0.34);
+  transform: translateY(-1px);
+}
+
+/* V2 glass card — Apple/Nike productlike frost.
+   Multi-layer soft shadow + 1px inner highlight border on top edge. */
+.v2-glass {
+  background: var(--v2-surface-primary);
+  border: 1px solid var(--v2-border-default);
+  box-shadow:
+    inset 0 1px 0 0 var(--v2-border-glass),
+    var(--v2-shadow-card);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+.v2-glass-elevated {
+  background: var(--v2-surface-elevated);
+  border: 1px solid var(--v2-border-default);
+  box-shadow:
+    inset 0 1px 0 0 var(--v2-border-glass),
+    var(--v2-shadow-hero);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+}
+@keyframes v2-dot-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* V2 — Aurum-style centralized gradient family. Same three pastel accents
+   (teal · peach · lavender), four arrangements. Each card gets a variation
+   so they read as a series — A/B/C/D — not identical clones. */
+
+/* Variation A — peach-dominant, warm leaning */
+.v2-grad-a {
+  background:
+    radial-gradient(ellipse 55% 60% at 50% 45%, rgba(170, 235, 250, 1), transparent 70%),
+    radial-gradient(ellipse 35% 45% at 22% 38%, rgba(163, 230, 230, 0.65), transparent 65%),
+    radial-gradient(ellipse 40% 45% at 78% 72%, rgba(205, 212, 245, 0.70), transparent 65%),
+    #fdfbf6;
+}
+.v2-grad-a-on {
+  background:
+    radial-gradient(ellipse 55% 60% at 50% 45%, rgba(130, 220, 245, 1), transparent 68%),
+    radial-gradient(ellipse 35% 45% at 22% 38%, rgba(141, 218, 218, 0.85), transparent 63%),
+    radial-gradient(ellipse 40% 45% at 78% 72%, rgba(181, 192, 240, 0.88), transparent 63%),
+    #fdfbf6;
+}
+
+/* Variation B — lavender-dominant, cool leaning, color blob in upper-right */
+.v2-grad-b {
+  background:
+    radial-gradient(ellipse 55% 60% at 65% 38%, rgba(205, 212, 245, 1), transparent 70%),
+    radial-gradient(ellipse 35% 45% at 28% 70%, rgba(170, 235, 250, 0.65), transparent 65%),
+    radial-gradient(ellipse 40% 40% at 18% 30%, rgba(163, 230, 230, 0.65), transparent 65%),
+    #fdfbf6;
+}
+.v2-grad-b-on {
+  background:
+    radial-gradient(ellipse 55% 60% at 65% 38%, rgba(181, 192, 240, 1), transparent 68%),
+    radial-gradient(ellipse 35% 45% at 28% 70%, rgba(130, 220, 245, 0.85), transparent 63%),
+    radial-gradient(ellipse 40% 40% at 18% 30%, rgba(141, 218, 218, 0.85), transparent 63%),
+    #fdfbf6;
+}
+
+/* Variation C — BORDER style. Colors bloom from corners, framing the card.
+   Teal top-left, peach top-right, lavender bottom — edges glow, center light. */
+.v2-grad-c {
+  background:
+    radial-gradient(ellipse 60% 55% at 0% 0%,   rgba(163, 230, 230, 0.92), transparent 60%),
+    radial-gradient(ellipse 55% 50% at 100% 0%, rgba(170, 235, 250, 0.95), transparent 60%),
+    radial-gradient(ellipse 80% 55% at 50% 100%, rgba(205, 212, 245, 0.95), transparent 60%),
+    #fdfbf6;
+}
+.v2-grad-c-on {
+  background:
+    radial-gradient(ellipse 60% 55% at 0% 0%,   rgba(141, 218, 218, 1), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 100% 0%, rgba(130, 220, 245, 1), transparent 58%),
+    radial-gradient(ellipse 80% 55% at 50% 100%, rgba(181, 192, 240, 1), transparent 58%),
+    #fdfbf6;
+}
+
+/* Variation D — BORDER style, alternate rotation. Lavender top-left,
+   teal top-right, peach bottom-center — same framing technique as C
+   but the corner palette is rotated. */
+.v2-grad-d {
+  background:
+    radial-gradient(ellipse 60% 55% at 0% 0%,   rgba(205, 212, 245, 0.95), transparent 60%),
+    radial-gradient(ellipse 55% 50% at 100% 0%, rgba(163, 230, 230, 0.92), transparent 60%),
+    radial-gradient(ellipse 80% 55% at 50% 100%, rgba(170, 235, 250, 0.95), transparent 60%),
+    #fdfbf6;
+}
+.v2-grad-d-on {
+  background:
+    radial-gradient(ellipse 60% 55% at 0% 0%,   rgba(181, 192, 240, 1), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 100% 0%, rgba(141, 218, 218, 1), transparent 58%),
+    radial-gradient(ellipse 80% 55% at 50% 100%, rgba(130, 220, 245, 1), transparent 58%),
+    #fdfbf6;
+}
+
+.v2-glass-quiet {
+  background: var(--v2-surface-subtle);
+  border: 1px solid var(--v2-border-subtle);
+  box-shadow:
+    inset 0 1px 0 0 var(--v2-border-glass),
+    var(--v2-shadow-soft);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+}
+
+/* Inner glass card — sits inside the frosted shell */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 1),
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 4px 16px rgba(0, 0, 0, 0.05);
 }
