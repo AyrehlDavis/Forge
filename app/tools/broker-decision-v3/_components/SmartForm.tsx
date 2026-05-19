@@ -11,6 +11,7 @@ import {
   STEPS,
   STEP_COUNT,
 } from "../_config/questionnaire";
+import { getState, getStateName } from "../_config/states";
 import type {
   LocationCount,
   Priority,
@@ -48,6 +49,102 @@ function isStepComplete(step: number, inputs: V3Inputs): boolean {
       return false;
   }
 }
+
+// Derived signal — short engine-aware read of the answer.
+// Tone semantics: indigo = portfolio complexity / scale; cyan = live data
+// derivation from the user's answer (market read, timing posture, etc.).
+type SignalTone = "indigo" | "cyan";
+
+interface ChipFacts {
+  short: string;
+  answer: string;
+  signal: string;
+  tone: SignalTone;
+}
+
+function chipFor(step: number, inputs: V3Inputs): ChipFacts | null {
+  switch (step) {
+    case 1: {
+      const v = inputs.locationCount;
+      if (!v) return null;
+      const map: Record<LocationCount, Omit<ChipFacts, "short">> = {
+        "1": { answer: "1 site", signal: "Single-site", tone: "cyan" },
+        "2-10": { answer: "2–10 sites", signal: "Small portfolio", tone: "cyan" },
+        "11-50": { answer: "11–50 sites", signal: "Mid portfolio · +1", tone: "indigo" },
+        "50+": { answer: "50+ sites", signal: "Enterprise · +2", tone: "indigo" },
+      };
+      return { short: "Sites", ...map[v] };
+    }
+    case 2: {
+      if (inputs.states.length === 0) return null;
+      const entries = inputs.states
+        .map(getState)
+        .filter((s): s is NonNullable<typeof s> => Boolean(s));
+      const dereg = entries.filter((s) => s.isDeregulated === true).length;
+      const partial = entries.filter((s) => s.isPartial === true).length;
+      const reg = entries.length - dereg - partial;
+
+      let signal = "Open market";
+      let tone: SignalTone = "cyan";
+      if (dereg === 0 && reg + partial > 0) {
+        signal = "Regulated only";
+        tone = "cyan";
+      } else if (dereg > 0 && (reg > 0 || partial > 0)) {
+        signal = "Mixed rulebooks · +1";
+        tone = "indigo";
+      } else if (entries.length > 1) {
+        signal = "Open market · multi-state";
+        tone = "indigo";
+      }
+
+      const answer =
+        inputs.states.length === 1
+          ? getStateName(inputs.states[0])
+          : `${inputs.states.length} states`;
+      return { short: "States", answer, signal, tone };
+    }
+    case 3: {
+      const v = inputs.spend;
+      if (!v) return null;
+      const map: Record<Spend, Omit<ChipFacts, "short">> = {
+        under_25k: { answer: "Under $25K", signal: "Light buyer", tone: "cyan" },
+        "25k_100k": { answer: "$25K–$100K", signal: "SMB scale", tone: "cyan" },
+        "100k_500k": { answer: "$100K–$500K", signal: "Mid-market · +1", tone: "indigo" },
+        over_500k: { answer: "Over $500K", signal: "Heavy spend · +2", tone: "indigo" },
+      };
+      return { short: "Spend", ...map[v] };
+    }
+    case 4: {
+      const v = inputs.priority;
+      if (!v) return null;
+      const map: Record<Priority, Omit<ChipFacts, "short">> = {
+        balanced_price_risk: { answer: "Balanced", signal: "Risk-aware", tone: "cyan" },
+        price_first: { answer: "Lower cost", signal: "Price focus", tone: "cyan" },
+        budget_certainty: { answer: "Certainty", signal: "Lock & forget", tone: "cyan" },
+        handled_for_me: { answer: "Handle it", signal: "Managed lean", tone: "cyan" },
+      };
+      return { short: "Priority", ...map[v] };
+    }
+    case 5: {
+      const v = inputs.situation;
+      if (!v) return null;
+      const map: Record<Situation, Omit<ChipFacts, "short">> = {
+        shopping_now: { answer: "Shopping now", signal: "Active buy", tone: "cyan" },
+        renewal_soon: { answer: "Renewal soon", signal: "Window opening", tone: "cyan" },
+        contract_6_plus_months: { answer: "6+ months out", signal: "Watching", tone: "cyan" },
+        always_in_market: { answer: "Always in market", signal: "Always live", tone: "cyan" },
+      };
+      return { short: "Timing", ...map[v] };
+    }
+    default:
+      return null;
+  }
+}
+
+const SIGNAL_TONE_CLASS: Record<SignalTone, string> = {
+  cyan: "text-[#0e7490]",
+  indigo: "text-[#4F5CB8]",
+};
 
 export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
   const [inputs, setInputs] = useState<V3Inputs>(EMPTY);
@@ -97,7 +194,7 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
       aria-label="Portfolio details"
       className="space-y-8"
     >
-      <CarouselProgress step={step} total={STEP_COUNT} />
+      <ChipTrail step={step} total={STEP_COUNT} inputs={inputs} onEdit={setStep} />
 
       <fieldset className="border-0 p-0">
         <legend className="block text-lg font-semibold text-slate-900 sm:text-xl">
@@ -211,36 +308,68 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
 }
 
 /**
- * Top-of-form carousel progress — 5 segments, fills as the user advances,
- * plus a tabular "Step N of 5" counter. V1 pattern, refreshed for V3.
+ * ChipTrail — replaces the segment-bar progress. Each answered step collapses
+ * into a chip showing the answer + a short engine-aware signal (cyan). Click
+ * a chip to jump back and edit that step. The current step appears as an
+ * outlined slot at the end of the row so users see "where they are."
  */
-function CarouselProgress({ step, total }: { step: number; total: number }) {
+function ChipTrail({
+  step,
+  total,
+  inputs,
+  onEdit,
+}: {
+  step: number;
+  total: number;
+  inputs: V3Inputs;
+  onEdit: (s: number) => void;
+}) {
+  const chips: Array<{ index: number; facts: ChipFacts }> = [];
+  for (let i = 1; i < step; i++) {
+    const facts = chipFor(i, inputs);
+    if (facts) chips.push({ index: i, facts });
+  }
+  const currentMeta = STEPS[step - 1];
+
   return (
-    <div className="flex items-center gap-4">
-      <ol
-        role="progressbar"
-        aria-valuenow={step}
-        aria-valuemin={1}
-        aria-valuemax={total}
-        aria-label={`Step ${step} of ${total}`}
-        className="flex flex-1 items-center gap-1.5"
-      >
-        {Array.from({ length: total }, (_, i) => i + 1).map((s) => (
-          <li
-            key={s}
-            className={`h-1 flex-1 rounded-full transition-colors duration-300 motion-safe:transition-all ${
-              s < step
-                ? "bg-arise-600"
-                : s === step
-                  ? "bg-gradient-to-r from-arise-electric to-arise-600"
-                  : "bg-slate-200"
-            }`}
-          />
-        ))}
-      </ol>
-      <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.12em] tabular-nums text-[#006bc5]">
-        Step {step} of {total}
-      </span>
+    <div
+      role="group"
+      aria-label={`Step ${step} of ${total}. Previously answered: ${chips.length}.`}
+      className="flex flex-wrap items-stretch gap-2"
+    >
+      {chips.map(({ index, facts }) => (
+        <button
+          key={index}
+          type="button"
+          onClick={() => onEdit(index)}
+          className="group relative flex flex-col items-start gap-0.5 rounded-[12px] border border-slate-200 bg-white/80 px-3 py-2 text-left shadow-[0_1px_0_rgba(15,23,42,0.04)] transition-all hover:border-arise-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
+          aria-label={`${facts.short}: ${facts.answer}. Edit.`}
+        >
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            {facts.short}
+          </span>
+          <span className="text-sm font-semibold leading-tight text-slate-900">
+            {facts.answer}
+          </span>
+          <span className={`text-[11px] font-medium leading-tight ${SIGNAL_TONE_CLASS[facts.tone]}`}>
+            {facts.signal}
+          </span>
+          <span
+            aria-hidden
+            className="absolute right-1.5 top-1.5 text-[10px] text-slate-300 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+          >
+            ✎
+          </span>
+        </button>
+      ))}
+      <div className="flex flex-col items-start gap-0.5 rounded-[12px] border border-dashed border-[#006bc5]/60 bg-arise-50/60 px-3 py-2">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#006bc5]">
+          {currentMeta.short} · step {step} of {total}
+        </span>
+        <span className="text-sm font-semibold leading-tight text-slate-900">
+          In progress…
+        </span>
+      </div>
     </div>
   );
 }

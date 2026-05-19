@@ -40,11 +40,11 @@ export function FaqSection() {
   }, [allOpen]);
 
   return (
-    <section id="faq" className="bg-white py-16 sm:py-20 lg:py-24">
+    <section id="faq" className="py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-[1184px] px-5 sm:px-8">
-        <div className="mx-auto max-w-[760px]">
+        <div>
           <div className="flex items-end justify-between gap-4">
-            <div>
+            <div className="max-w-[760px]">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#006bc5]">
                 Common questions
               </p>

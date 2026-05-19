@@ -189,7 +189,7 @@ function DeliverableCard({
       <div className="flex items-start gap-3">
         <span
           aria-hidden
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#ECFEFF] text-[#0e7490]"
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-arise-50 text-[#006bc5]"
         >
           {icon}
         </span>

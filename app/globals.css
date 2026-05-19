@@ -129,6 +129,31 @@ body {
   }
 }
 
+/* V3 hero entrance — subtle rise + fade. Apply with staggered animationDelay.
+   320ms ease-out. `both` keeps the start state until the animation begins
+   so no flash-of-final-position before the delay fires. */
+@keyframes v3-hero-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.v3-hero-rise {
+  animation: v3-hero-rise 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* V3 verdict band — single signature reveal when result lands.
+   600ms ease-out, slightly larger travel than hero-rise so the band reads as
+   "the moment" instead of part of the general entrance choreography. */
+@keyframes v3-verdict-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.v3-verdict-rise {
+  animation: v3-verdict-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .v3-verdict-rise { animation: none; }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }

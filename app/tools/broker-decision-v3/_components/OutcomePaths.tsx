@@ -30,7 +30,7 @@ const PATHS: PathDef[] = [
   },
   {
     rank: "Path C",
-    label: "Arise-managed",
+    label: "Broker-managed",
     blurb:
       "Send invoices or a utility login. We watch the market and act when the timing fits.",
     best: "Best when you'd rather not chase it.",

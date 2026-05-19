@@ -72,28 +72,26 @@ function chooseTrack(input: V3Inputs, flags: DerivedFlags): Track {
     !flags.hasDeregulatedState &&
     !flags.hasPartialState
   ) {
-    return "D_regulated";
+    return "C_regulated";
   }
 
-  // Always-in-market or 6+ months out → Arise-managed (market watch),
-  // unless single-site & low spend, in which case go direct.
+  // Always-in-market, 6+ months out, or explicit "handle it for me" with any
+  // portfolio signal → broker (was Arise-managed; A and C overlapped, collapsed).
   if (
     (input.situation === "always_in_market" ||
       input.situation === "contract_6_plus_months") &&
     !(flags.lowSpend && !flags.multiSite && !flags.multiState)
   ) {
-    return "C_arise_managed";
+    return "A_use_broker";
   }
-
-  // Explicit "handle it for me" with any portfolio signal → Arise-managed.
   if (
     flags.wantsArise &&
     (flags.multiSite || flags.multiState || flags.highSpend)
   ) {
-    return "C_arise_managed";
+    return "A_use_broker";
   }
 
-  // Wantsarise but small/simple → direct (Arise can still second-opinion the quote).
+  // wantsArise but small/simple → direct (broker can still second-opinion the quote).
   if (flags.wantsArise) {
     return "B_go_direct";
   }
@@ -111,8 +109,8 @@ function chooseTrack(input: V3Inputs, flags: DerivedFlags): Track {
   }
   if (flags.highSpend && flags.riskLeaning) return "A_use_broker";
 
-  // Mixed market + multi-site → Arise-managed (hybrid is the right play here).
-  if (flags.marketMixed && flags.multiSite) return "C_arise_managed";
+  // Mixed market + multi-site → broker (was hybrid).
+  if (flags.marketMixed && flags.multiSite) return "A_use_broker";
 
   // Direct cases — require deregulated.
   if (
@@ -132,7 +130,7 @@ function chooseTrack(input: V3Inputs, flags: DerivedFlags): Track {
   }
 
   // Fall through.
-  return flags.hasDeregulatedState ? "C_arise_managed" : "D_regulated";
+  return flags.hasDeregulatedState ? "A_use_broker" : "C_regulated";
 }
 
 function fmtSpend(spend: Spend | null): string {
@@ -170,11 +168,7 @@ function buildHeadline(
       return `For ${spend} across ${sites} in ${mix}, a broker earns its keep.`;
     case "B_go_direct":
       return `For ${sites} in ${mix}, you can handle this directly.`;
-    case "C_arise_managed":
-      return flags.marketMixed
-        ? `Your ${sites} portfolio spans mixed markets — let Arise watch and act when it counts.`
-        : `For ${sites} in ${mix}, an Arise-managed approach makes the most of your timing.`;
-    case "D_regulated":
+    case "C_regulated":
       return input.states.length === 1
         ? `${getStateName(input.states[0])} doesn't have supplier choice — here's what actually moves the needle.`
         : `Your states don't have supplier choice — here's what actually moves the needle.`;
@@ -229,28 +223,7 @@ function buildWhy(
             "Fewer people in the contract chain, fewer places for things to slip.",
         },
       ];
-    case "C_arise_managed":
-      return [
-        {
-          label: flags.marketMixed
-            ? "Your portfolio spans different markets."
-            : "Your timing window favors watching, not buying.",
-          body: flags.marketMixed
-            ? "Different markets need different plays — locking everything at once is a risk."
-            : "Buying today may mean buying badly. Market watch lets you act when the data supports it.",
-        },
-        {
-          label: "Arise pulls the data; you don't chase invoices.",
-          body:
-            "Send invoices or a utility login — we map sites, contracts, usage, and supplier details.",
-        },
-        {
-          label: "You see the portfolio anytime.",
-          body:
-            "Log in to check status by site. Act when we tell you the market and the terms line up.",
-        },
-      ];
-    case "D_regulated":
+    case "C_regulated":
       return [
         {
           label: "Your markets sell power through the regulated utility.",
@@ -284,11 +257,9 @@ function estSavings(input: V3Inputs, track: Track): number | null {
   switch (track) {
     case "A_use_broker":
       return Math.round((supply * 0.07) / 100) * 100;
-    case "C_arise_managed":
-      return Math.round((supply * 0.05) / 100) * 100;
     case "B_go_direct":
       return Math.round((supply * 0.025) / 100) * 100;
-    case "D_regulated":
+    case "C_regulated":
       return Math.round((SPEND_MIDPOINTS[input.spend] * 0.03) / 100) * 100;
   }
 }

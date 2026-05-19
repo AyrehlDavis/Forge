@@ -51,17 +51,8 @@ export function BrokerDecisionV3() {
   }, []);
 
   return (
-    <section id="broker-check" className="relative py-16 sm:py-20 lg:py-24">
+    <section id="broker-check" className="relative pb-16 pt-2 sm:pb-20 sm:pt-2 lg:pb-24 lg:pt-4">
       <div className="relative mx-auto max-w-[1184px] px-5 sm:px-8">
-        <div className="mb-10 max-w-[760px]">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
-            The broker check
-          </p>
-          <h2 className="mt-4 text-[32px] font-semibold leading-[1.08] tracking-tight text-slate-900 sm:text-[40px] lg:text-[48px]">
-            Five answers, one practical next step.
-          </h2>
-        </div>
-
         {phase === "form" && (
           <div className="rounded-[20px] border border-white/60 bg-white/55 p-5 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-7 lg:p-10">
             <SmartForm onChange={setFormInputs} onSubmit={handleSubmit} />

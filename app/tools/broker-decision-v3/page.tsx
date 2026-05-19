@@ -7,6 +7,7 @@ import { Hero } from "./_components/Hero";
 import { HowToVet } from "./_components/HowToVet";
 import { SiteHeader } from "./_components/SiteHeader";
 import { SocialProof } from "./_components/SocialProof";
+import { StatStrip } from "./_components/StatStrip";
 import { WhyThisMatters } from "./_components/WhyThisMatters";
 
 export const metadata: Metadata = {
@@ -27,8 +28,9 @@ export default function Page() {
         <SiteHeader />
         <main>
           <Hero />
-          <WhyThisMatters />
+          <StatStrip />
           <BrokerDecisionV3 />
+          <WhyThisMatters />
           <HowToVet />
           <SocialProof />
           <FaqSection />

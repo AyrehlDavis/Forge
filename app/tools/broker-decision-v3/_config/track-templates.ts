@@ -3,8 +3,7 @@ import type { Priority, Track } from "../_lib/types";
 export const TRACK_LABELS: Record<Track, string> = {
   A_use_broker: "Use a broker",
   B_go_direct: "Go direct",
-  C_arise_managed: "Arise-managed",
-  D_regulated: "Regulated market",
+  C_regulated: "Regulated market",
 };
 
 // V3 result cards use these accents. Each accent meets WCAG AA on white text.
@@ -31,13 +30,7 @@ export const TRACK_ACCENTS: Record<Track, {
     chipText: "#0e7490",
     bodyBg: "#F1FBFD",
   },
-  C_arise_managed: {
-    headerBg: "linear-gradient(180deg, #6173E5 0%, #4F5CB8 100%)",
-    chipBg: "#EEF0FB",
-    chipText: "#4F5CB8",
-    bodyBg: "#F5F3FF",
-  },
-  D_regulated: {
+  C_regulated: {
     headerBg: "linear-gradient(180deg, #334155 0%, #1e293b 100%)",
     chipBg: "#F1F5F9",
     chipText: "#334155",
@@ -99,29 +92,7 @@ const CLOSES: Record<Track, Record<PriorityKey, CloseTemplate>> = {
       cta: "Send your invoice",
     },
   },
-  C_arise_managed: {
-    balanced_price_risk: {
-      body:
-        "Given your answers point to a mixed path, we'd build the portfolio view first. Send invoices or a utility login for each location, and Arise pulls usage, dates, supplier details, and market data. Then we separate what should be quoted now, what should be watched, and what can stay direct. That keeps you from locking every site on one bad market day.",
-      cta: "Build the view",
-    },
-    price_first: {
-      body:
-        "Given you want lower total cost across a mixed portfolio, we'd sort sites by size, contract date, and market. Some accounts need broker competition; others are simple enough to quote direct. Arise pulls the data, compares all-in costs, and shows where fees or pass-throughs change the answer. The goal isn't the lowest-looking rate. It's the best cost for the risk you're carrying.",
-      cta: "Map the portfolio",
-    },
-    budget_certainty: {
-      body:
-        "Given you want budget certainty across several sites or dates, we wouldn't buy everything at once unless the data supports it. Arise pulls invoices, contracts, and location data, then combines that with market data to plan when each account should move. You get a portfolio view, a short call on priorities, and ongoing market watch until it's time to act.",
-      cta: "Plan the timing",
-    },
-    handled_for_me: {
-      body:
-        "Given you want this handled, this is the strongest Arise fit. Send an invoice from each location or a utility login. We use that data, plus a letter to act on your behalf, to gather contract details and build your portfolio view. From there we have a short call, monitor the market, and move when timing and terms make sense. You can log in anytime to see status by site.",
-      cta: "Send your invoice",
-    },
-  },
-  D_regulated: {
+  C_regulated: {
     balanced_price_risk: {
       body:
         "Your markets sell power through the regulated utility, so there's nothing to bid out. The savings live in tariff structure, demand management, and efficiency upgrades. Arise can pull your tariff and usage, find the time-of-use or demand-response programs you qualify for, and lay out which moves pay back fastest.",
@@ -189,22 +160,7 @@ export const VET_CHECKLIST: Record<Track, { dealMakers: string[]; dealBreakers: 
       "Pass-through charges hidden outside the quoted rate.",
     ],
   },
-  C_arise_managed: {
-    dealMakers: [
-      "Portfolio view by site, with contract dates and usage in one place.",
-      "Market watch with a clear signal for when to act.",
-      "Arise team can answer questions about your specific contracts.",
-      "Login lets you see status anytime.",
-      "Clear terms on what Arise does on your behalf.",
-    ],
-    dealBreakers: [
-      "Vague on what Arise actually acts on vs. what you decide.",
-      "No portfolio view by site.",
-      "No way to see status without calling someone.",
-      "Surprise actions without your sign-off.",
-    ],
-  },
-  D_regulated: {
+  C_regulated: {
     dealMakers: [
       "Tariff review names the rate schedule you should be on.",
       "Demand-response options are evaluated with your load profile.",

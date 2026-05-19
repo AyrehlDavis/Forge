@@ -17,8 +17,7 @@ export type Situation =
 export type Track =
   | "A_use_broker"
   | "B_go_direct"
-  | "C_arise_managed"
-  | "D_regulated";
+  | "C_regulated";
 
 export interface V3Inputs {
   spend: Spend | null;
