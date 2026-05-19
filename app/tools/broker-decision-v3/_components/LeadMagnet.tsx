@@ -360,6 +360,13 @@ function DeliverableCard({
           <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-slate-500">
             Prepared for: {preparedFor}
           </p>
+          <button
+            type="button"
+            className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[#006bc5] underline-offset-4 transition-colors hover:text-arise-800 hover:underline focus:outline-none focus-visible:underline"
+          >
+            <span aria-hidden>↓</span>
+            Download PDF
+          </button>
         </div>
       </div>
     </article>

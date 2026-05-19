@@ -42,6 +42,18 @@ function estTimeSavedHours(inputs: V3Inputs, track: Track): number {
   return Math.max(5, Math.round(raw / 5) * 5);
 }
 
+// Per-track subtext qualifies the time-saved stat — names the work Arise
+// absorbs so the value doesn't read as a free dollar figure. Replaces the
+// "directional" pill that previously did this work in fewer words.
+const TIME_SAVED_SUBTEXT: Record<Track, string> = {
+  A_use_broker:
+    "Broker research, supplier calls, and quote comparison you don't need to start from scratch.",
+  B_go_direct:
+    "Supplier RFP authoring, bid review, and contract comparison you don't need to do solo.",
+  C_regulated:
+    "Portfolio mechanics setup, utility program research, and tariff analysis we handle.",
+};
+
 // One-line trace condensing the chip-trail. Format: "sites · states · spend · priority · timing"
 // Lets the user see exactly what the engine read off their answers without re-opening the form.
 const PRIORITY_TRACE: Record<NonNullable<V3Inputs["priority"]>, string> = {
@@ -126,38 +138,41 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
         )}
       </header>
 
-      <div className="space-y-7 px-6 py-7 sm:px-8 sm:py-8">
-        {/* Rule trace — chip-trail collapsed to a single line so the user sees
-            exactly what the engine read off their answers. */}
-        <div className="flex flex-col gap-1.5 rounded-[12px] border border-slate-200/80 bg-white/70 px-4 py-3">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Here&apos;s how we got here
-          </span>
-          <span className="text-sm leading-snug text-slate-700">
-            {buildRuleTrace(result.inputs)}
-          </span>
-        </div>
+      <div className="space-y-10 px-6 py-8 sm:space-y-12 sm:px-8 sm:py-10">
+        {/* Rule trace — single caption line, no card chrome. Sits directly
+            under the verdict band as a quiet "based on" qualifier. */}
+        <p className="text-sm leading-relaxed text-slate-500">
+          Based on: {buildRuleTrace(result.inputs)}
+        </p>
 
-        {/* Single stat — hours of your life back, not dollars. Track-scaled
-            (broker = highest, direct = lower, regulated = research-heavy). */}
-        <div className="grid grid-cols-1" data-temp="result-stat-time-saved">
+        {/* Single stat — "Decision time saved · ~N hours" + per-track
+            qualifier subtext naming the work Arise absorbs. */}
+        <div data-temp="result-stat-time-saved">
           <StatBlock
-            label="Time saved"
-            value={`${estTimeSavedHours(result.inputs, result.track)} hrs / yr`}
-            hint="directional"
+            label="Decision time saved"
+            value={`~${estTimeSavedHours(result.inputs, result.track)} hours`}
+            caption={TIME_SAVED_SUBTEXT[result.track]}
             tone="brand"
           />
         </div>
 
+        {/* Signal trace — three compact one-liners replacing the old
+            label/body two-tier blocks. Each reads "Label — sentence." */}
         <section>
           <h4 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
             Why this recommendation
           </h4>
-          <ul className="mt-3 space-y-2.5">
+          <ul className="mt-4 space-y-2">
             {result.whyBullets.map((b, i) => (
-              <li key={i} className="text-sm leading-6 text-slate-700">
-                <p className="font-semibold text-slate-900">{b.label}</p>
-                <p className="mt-1 text-slate-600">{b.body}</p>
+              <li
+                key={i}
+                className="text-sm leading-relaxed text-slate-600"
+              >
+                <span className="font-semibold text-slate-900">
+                  {b.label.replace(/[.]\s*$/, "")}
+                </span>
+                <span aria-hidden> — </span>
+                {b.body}
               </li>
             ))}
           </ul>
@@ -181,7 +196,8 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
           <p className="mt-2.5 text-sm leading-6 text-[#0A1F1F]">
             {result.presumptiveClose.body}
           </p>
-          <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          {/* Single CTA — Download PDF moved to the DeliverableCard below. */}
+          <div className="mt-4">
             <button
               type="button"
               className="v3-pill-primary inline-flex h-10 items-center justify-center gap-2 px-5 text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
@@ -189,16 +205,12 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
               {result.presumptiveClose.cta}
               <span aria-hidden>→</span>
             </button>
-            <button
-              type="button"
-              className="inline-flex h-10 items-center justify-center gap-1.5 text-sm text-slate-700 underline-offset-4 hover:text-[#0A1F1F] hover:underline focus:outline-none focus-visible:underline"
-            >
-              Download PDF
-            </button>
           </div>
         </section>
 
-        <div className="flex flex-col items-start gap-3 border-t border-slate-200/80 pt-5 sm:flex-row sm:items-center sm:justify-between">
+        {/* Footer ladder — primary next step prominent, edit-answers
+            demoted but still accessible. */}
+        <div className="flex flex-col items-start gap-3 border-t border-slate-200/80 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <a
             href="#how-to-vet"
             className="group inline-flex items-center gap-1.5 text-sm font-semibold text-[#006bc5] transition-colors hover:text-arise-800 focus:outline-none focus-visible:underline"
@@ -209,7 +221,7 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
           <button
             type="button"
             onClick={onReset}
-            className="text-sm text-slate-500 underline-offset-4 transition-colors hover:text-[#0A1F1F] hover:underline focus:outline-none focus-visible:underline"
+            className="text-xs text-slate-500 underline-offset-4 transition-colors hover:text-slate-700 hover:underline focus:outline-none focus-visible:underline"
           >
             Edit my answers
           </button>
@@ -240,25 +252,27 @@ const STAT_TONES = {
 function StatBlock({
   label,
   value,
-  hint,
+  caption,
   tone,
 }: {
   label: string;
   value: string;
-  hint?: string | null;
+  caption?: string | null;
   tone: keyof typeof STAT_TONES;
 }) {
   const t = STAT_TONES[tone];
   return (
-    <div className={`rounded-[12px] ${t.bg} p-4`}>
+    <div className={`rounded-[12px] ${t.bg} p-5 sm:p-6`}>
       <div className={`text-[10px] font-semibold uppercase tracking-[0.16em] ${t.label}`}>
         {label}
       </div>
       <div className={`mt-2 text-[26px] font-semibold leading-none tracking-tight tabular-nums sm:text-[30px] ${t.value}`}>
         {value}
       </div>
-      {hint && (
-        <div className="mt-1.5 text-[10px] text-slate-500">{hint}</div>
+      {caption && (
+        <p className="mt-3 max-w-[560px] text-[13px] leading-snug text-slate-600">
+          {caption}
+        </p>
       )}
     </div>
   );
