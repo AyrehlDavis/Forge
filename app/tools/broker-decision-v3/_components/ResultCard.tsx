@@ -3,20 +3,43 @@
 import { useEffect, useRef } from "react";
 import { getStateName } from "../_config/states";
 import { TRACK_ACCENTS } from "../_config/track-templates";
-import type { V3Inputs, V3Recommendation } from "../_lib/types";
+import type { Track, V3Inputs, V3Recommendation } from "../_lib/types";
 
 interface ResultCardProps {
   result: V3Recommendation;
   onReset: () => void;
 }
 
-const COMPLEXITY_LABELS = { low: "Low", medium: "Medium", high: "High" } as const;
+// Time-saved derivation — directional hours/year the buyer gets back by
+// following the track's recommendation. Track A is highest (broker runs the
+// bidding/negotiation); Track B lower (still doing the work with our
+// guidance); Track C is research-heavy (utility programs + tariffs).
+// Scales with site count + spend tier, since multi-site portfolios eat
+// proportionally more procurement time. Rounded to nearest 5 for the
+// directional feel — same posture the old "directional savings" stat carried.
+const TIME_BASE_BY_TRACK: Record<Track, number> = {
+  A_use_broker: 20,
+  B_go_direct: 6,
+  C_regulated: 12,
+};
+const SITE_FACTOR: Record<NonNullable<V3Inputs["locationCount"]>, number> = {
+  "1": 1,
+  "2-10": 1.6,
+  "11-50": 2.4,
+  "50+": 3.5,
+};
+const SPEND_FACTOR: Record<NonNullable<V3Inputs["spend"]>, number> = {
+  under_25k: 0.8,
+  "25k_100k": 1,
+  "100k_500k": 1.6,
+  over_500k: 2.4,
+};
 
-function fmtSavings(n: number | null): string {
-  if (n === null) return "—";
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`;
-  return `$${n}`;
+function estTimeSavedHours(inputs: V3Inputs, track: Track): number {
+  const sf = inputs.locationCount ? SITE_FACTOR[inputs.locationCount] : 1;
+  const pf = inputs.spend ? SPEND_FACTOR[inputs.spend] : 1;
+  const raw = TIME_BASE_BY_TRACK[track] * sf * pf;
+  return Math.max(5, Math.round(raw / 5) * 5);
 }
 
 // One-line trace condensing the chip-trail. Format: "sites · states · spend · priority · timing"
@@ -115,23 +138,14 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
           </span>
         </div>
 
-        {/* Stat row — savings carries the brand color (the dollar value),
-            complexity carries indigo per palette ownership (portfolio scale). */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* Single stat — hours of your life back, not dollars. Track-scaled
+            (broker = highest, direct = lower, regulated = research-heavy). */}
+        <div className="grid grid-cols-1" data-temp="result-stat-time-saved">
           <StatBlock
-            label={result.metrics.estAnnualSavings === null ? "Focus area" : "Est. savings / yr"}
-            value={
-              result.metrics.estAnnualSavings === null
-                ? "Tariff + efficiency"
-                : fmtSavings(result.metrics.estAnnualSavings)
-            }
-            hint={result.metrics.estAnnualSavings === null ? null : "directional"}
+            label="Time saved"
+            value={`${estTimeSavedHours(result.inputs, result.track)} hrs / yr`}
+            hint="directional"
             tone="brand"
-          />
-          <StatBlock
-            label="Complexity"
-            value={COMPLEXITY_LABELS[result.metrics.complexity]}
-            tone="indigo"
           />
         </div>
 

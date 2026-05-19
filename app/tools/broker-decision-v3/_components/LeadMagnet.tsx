@@ -178,18 +178,15 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
         </ul>
       )}
 
-      {/* Email-preview panel — show what arrives, don't symbolize it. */}
-      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <PdfPreviewCard
+      {/* Unified deliverable card — meeting kit + market snapshot in a
+          single intentional surface. Visually light, no dense data rows. */}
+      <div className="mt-6">
+        <DeliverableCard
           title={asset.title}
           body={asset.body}
           stateName={stateName}
           spendLabel={inputs.spend ? SPEND_LABEL[inputs.spend] : null}
-        />
-        <SnapshotPreviewCard
-          stateName={stateName}
-          market={inputs.states.length > 0 ? marketLabelFromStates(inputs.states) : "—"}
-          situation={inputs.situation}
+          situationLabel={inputs.situation ? SITUATION_LABEL[inputs.situation] : null}
         />
       </div>
 
@@ -321,54 +318,47 @@ function SuccessState() {
   );
 }
 
-// PDF preview — stylized first-page representation showing the track-specific
-// asset name, the user's personalization, and a faded sample of question rows.
-function PdfPreviewCard({
+// Unified deliverable card — meeting kit + market snapshot together in one
+// intentional surface. Visually light: a single small artifact-and-state
+// lockup on the left, the asset title + "prepared from" line on the right.
+// No data rows, no multi-thumb peeks, no source-attribution lines — those
+// were a previous direction; this version strips back to one quiet card.
+function DeliverableCard({
   title,
   body,
   stateName,
   spendLabel,
+  situationLabel,
 }: {
   title: string;
   body: string;
   stateName: string;
   spendLabel: string | null;
+  situationLabel: string | null;
 }) {
+  const preparedFor = [stateName, spendLabel, "11–50 sites", situationLabel]
+    .filter((s): s is string => Boolean(s))
+    .join(" · ");
+
   return (
     <article
-      data-temp="magnet-pdf-preview"
-      className="relative overflow-hidden rounded-[12px] border border-slate-200 bg-white p-4"
+      data-temp="magnet-deliverable-card"
+      className="overflow-hidden rounded-[16px] border border-slate-200 bg-white"
     >
-      <div className="flex items-start gap-3">
-        <div
-          aria-hidden
-          className="flex h-[88px] w-16 shrink-0 flex-col justify-between rounded-[6px] border border-slate-200 bg-gradient-to-b from-white to-arise-50/60 p-1.5 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.08)]"
-        >
-          <div className="space-y-0.5">
-            <div className="h-1 w-6 rounded-full bg-[#006bc5]" />
-            <div className="h-0.5 w-10 rounded-full bg-slate-300" />
-          </div>
-          <div className="space-y-0.5">
-            <div className="h-0.5 w-9 rounded-full bg-slate-200" />
-            <div className="h-0.5 w-7 rounded-full bg-slate-200" />
-            <div className="h-0.5 w-8 rounded-full bg-slate-200" />
-            <div className="h-0.5 w-6 rounded-full bg-slate-200" />
-          </div>
-          <div className="text-center text-[6px] font-semibold uppercase tracking-[0.1em] text-slate-400">
-            ~9 pp
-          </div>
+      <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-[160px_1fr] sm:items-center sm:gap-7 sm:p-8">
+        <div className="flex justify-center sm:justify-start">
+          <DeliverableLockup stateName={stateName} />
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#006bc5]">
-            PDF · 1 of 2
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#006bc5]">
+            What arrives in your inbox
           </p>
-          <p className="mt-1 text-sm font-semibold leading-snug text-slate-900">
-            {title}
-          </p>
-          <p className="mt-1.5 text-xs leading-5 text-slate-600">{body}</p>
-          <p className="mt-2 text-[10px] uppercase tracking-[0.14em] text-slate-500">
-            Prepared for: {stateName}
-            {spendLabel ? ` · ${spendLabel}` : ""}
+          <h4 className="mt-2 text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
+            {title} + {stateName} market snapshot
+          </h4>
+          <p className="mt-2 text-sm leading-6 text-slate-600">{body}</p>
+          <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-slate-500">
+            Prepared for: {preparedFor}
           </p>
         </div>
       </div>
@@ -376,76 +366,52 @@ function PdfPreviewCard({
   );
 }
 
-// Snapshot preview — stylized state outline + market read for the user's
-// portfolio. Values illustrative, marked data-temp until real data is wired.
-function SnapshotPreviewCard({
-  stateName,
-  market,
-  situation,
-}: {
-  stateName: string;
-  market: string;
-  situation: Situation | null;
-}) {
-  const windowNote =
-    situation === "shopping_now"
-      ? "Active window"
-      : situation === "renewal_soon"
-        ? "90-day window"
-        : situation === "contract_6_plus_months"
-          ? "6+ mo lead"
-          : situation === "always_in_market"
-            ? "Continuous"
-            : "Window TBD";
-
+// Single visual element — a small PDF cover with the state outline tucked
+// into it. Combines the "meeting kit" and "market snapshot" deliverables
+// into one quiet lockup.
+function DeliverableLockup({ stateName }: { stateName: string }) {
   return (
-    <article
-      data-temp="magnet-snapshot-preview"
-      className="relative overflow-hidden rounded-[12px] border border-slate-200 bg-white p-4"
+    <figure
+      aria-label="PDF + market snapshot preview"
+      className="relative"
     >
-      <div className="flex items-start gap-3">
-        <div
-          aria-hidden
-          className="flex h-[88px] w-16 shrink-0 items-center justify-center rounded-[6px] border border-slate-200 bg-gradient-to-br from-arise-50/40 to-white"
-        >
-          <svg
-            viewBox="0 0 40 40"
-            fill="none"
-            stroke="#006bc5"
-            strokeWidth="1.5"
-            strokeLinejoin="round"
-            className="h-9 w-9 opacity-70"
-          >
-            <path d="M6 10 L14 8 L22 11 L30 9 L34 14 L33 22 L29 30 L22 33 L14 31 L8 27 L5 19 Z" />
-            <circle cx="18" cy="20" r="1.5" fill="#006bc5" />
-          </svg>
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#0e7490]">
-            Snapshot · 2 of 2
-          </p>
-          <p className="mt-1 text-sm font-semibold leading-snug text-slate-900">
-            {stateName} market snapshot
-          </p>
-          <dl
-            className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-[11px] leading-tight"
-            data-temp="magnet-snapshot-rows"
-          >
-            <dt className="text-slate-500">Status</dt>
-            <dd className="text-right font-medium text-slate-900">{market}</dd>
-            <dt className="text-slate-500">Suppliers</dt>
-            <dd className="text-right font-medium tabular-nums text-slate-900">
-              14 active
-            </dd>
-            <dt className="text-slate-500">Rate range</dt>
-            <dd className="text-right font-medium tabular-nums text-slate-900">
-              $0.068–$0.082
-            </dd>
-            <dt className="text-slate-500">Timing</dt>
-            <dd className="text-right font-medium text-slate-900">{windowNote}</dd>
-          </dl>
+      <div
+        className="relative overflow-hidden rounded-[6px] border border-slate-200 bg-white shadow-[0_4px_16px_-4px_rgba(15,23,42,0.12)]"
+        style={{ width: 140, height: 181 }}
+      >
+        <div className="absolute inset-x-0 top-0 h-[3px] bg-[#007fe8]" />
+        <div className="flex h-full flex-col justify-between px-4 pb-4 pt-5">
+          <div>
+            <p className="text-[7px] font-semibold uppercase tracking-[0.18em] text-[#007fe8]">
+              Broker meeting kit
+            </p>
+            <p className="mt-2 text-[11px] font-semibold leading-[1.15] tracking-tight text-slate-900">
+              9 broker questions + {stateName} snapshot
+            </p>
+            <div className="mt-2 space-y-[3px]">
+              <div className="h-[1px] w-16 rounded-full bg-slate-200" />
+              <div className="h-[1px] w-14 rounded-full bg-slate-200" />
+              <div className="h-[1px] w-12 rounded-full bg-slate-200" />
+            </div>
+          </div>
+          <div className="flex items-end justify-between gap-2">
+            <p className="text-[7px] uppercase tracking-[0.14em] text-slate-400">
+              ~9 pp · Letter
+            </p>
+            <svg
+              viewBox="0 0 240 240"
+              fill="#007fe8"
+              stroke="#007fe8"
+              strokeWidth="1"
+              strokeLinejoin="round"
+              aria-hidden
+              className="h-9 w-9 opacity-90"
+            >
+              <path d="M52 78 L88 70 L122 78 L148 72 L182 80 L196 92 L208 116 L214 138 L210 158 L196 178 L184 196 L166 210 L142 218 L120 220 L98 212 L74 196 L58 174 L48 152 L42 130 L46 104 Z" />
+            </svg>
+          </div>
         </div>
       </div>
-    </article>
+    </figure>
   );
 }
