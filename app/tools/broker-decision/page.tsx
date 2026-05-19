@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { BrokerDecisionTool } from "./BrokerDecisionTool";
 import {
   LandingHero,
@@ -26,7 +27,7 @@ export default function BrokerDecisionPage() {
       {/* Site brand header — sits above the hero so the page reads as part of
           the .com surface, not a standalone tool. */}
       <header className="relative mx-auto max-w-5xl px-4 sm:px-6 pt-8 sm:pt-10">
-        <a
+        <Link
           href="/"
           aria-label="Arise Energy — home"
           className="inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-arise-500 rounded"
@@ -39,7 +40,7 @@ export default function BrokerDecisionPage() {
             height={48}
             className="h-9 sm:h-10 w-auto"
           />
-        </a>
+        </Link>
       </header>
 
       {/* Wider container than the original max-w-3xl — landing sections need room

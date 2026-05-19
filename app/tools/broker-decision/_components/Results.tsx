@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, type ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import type { RecommendationOutput } from "../_lib/types";
 import { TRACK_CONTENT } from "../_config/track-templates";
 
@@ -95,7 +95,7 @@ export const Results = forwardRef<HTMLDivElement, ResultsProps>(function Results
       <div className="mt-8 grid gap-10">
         <WhySection bullets={whyBullets} />
 
-        <ActionChecklist items={content.actionChecklist} />
+        <QuestionsList heading={content.questionsHeader} items={content.questions} />
 
         <FlagsTable redFlags={content.redFlags} greenFlags={content.greenFlags} />
       </div>
@@ -129,72 +129,34 @@ function WhySection({ bullets }: { bullets: Array<{ label: string; body: string 
   );
 }
 
-function ActionChecklist({ items }: { items: string[] }) {
-  const [checked, setChecked] = useState<boolean[]>(() => items.map(() => false));
-
-  const toggle = (i: number) =>
-    setChecked((arr) => {
-      const next = arr.slice();
-      next[i] = !next[i];
-      return next;
-    });
-
+/**
+ * Questions list — numbered, no checkbox state. The user takes these into a
+ * sales call, not back into the page, so persisting checked state would add
+ * noise without value. Numbered chips give the list visual rhythm without the
+ * Atlassian-checkbox feel we moved away from in SelectionGroup.
+ */
+function QuestionsList({ heading, items }: { heading: string; items: string[] }) {
   return (
     <section>
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-arise-700">
-        Your action checklist
+        {heading}
       </p>
-      <ul role="list" className="mt-4 space-y-1">
-        {items.map((item, i) => {
-          const isChecked = checked[i];
-          return (
-            <li key={i} role="listitem">
-              <button
-                type="button"
-                role="checkbox"
-                aria-checked={isChecked}
-                onClick={() => toggle(i)}
-                onKeyDown={(e) => {
-                  if (e.key === " " || e.key === "Enter") {
-                    e.preventDefault();
-                    toggle(i);
-                  }
-                }}
-                className="w-full text-left flex items-start gap-3 py-2 px-2 -mx-2 rounded-md hover:bg-arise-50/50 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-arise-500"
-              >
-                {/* Checkbox slot — empty square at rest, bare SVG check (with v1-check-pop) when checked. */}
-                <span
-                  aria-hidden="true"
-                  className={`flex-shrink-0 w-5 h-5 mt-0.5 rounded border-2 flex items-center justify-center transition-colors duration-150 ${
-                    isChecked ? "border-arise-600 bg-arise-50" : "border-slate-300 bg-white/70"
-                  }`}
-                >
-                  {isChecked && (
-                    <svg
-                      className="v1-check-pop w-3.5 h-3.5 text-arise-600"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  )}
-                </span>
-                <span
-                  className={`text-sm leading-relaxed transition-colors duration-150 ${
-                    isChecked ? "line-through text-slate-400" : "text-slate-700"
-                  }`}
-                >
-                  {item}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      <ol role="list" className="mt-4 space-y-2.5">
+        {items.map((q, i) => (
+          <li
+            key={i}
+            className="flex items-start gap-3 text-sm text-slate-700 leading-relaxed"
+          >
+            <span
+              aria-hidden
+              className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-arise-100/80 text-arise-700 text-xs font-semibold inline-flex items-center justify-center tabular-nums"
+            >
+              {i + 1}
+            </span>
+            <span>{q}</span>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }

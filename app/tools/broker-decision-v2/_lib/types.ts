@@ -6,6 +6,10 @@ export type Priority =
 
 export type Situation = "exploring" | "renewal" | "active" | "unhappy";
 
+export type Spend = "under_50k" | "50k_250k" | "250k_1m" | "over_1m";
+
+export type LocationCount = "1" | "2-10" | "11-50" | "50+";
+
 export type Recommendation =
   | "broker"
   | "direct"
@@ -13,8 +17,8 @@ export type Recommendation =
   | "regulated";
 
 export interface V2Inputs {
-  annualSpend: number;
-  siteCount: number;
+  spend: Spend | null;
+  locationCount: LocationCount | null;
   states: string[];
   priority: Priority | null;
   situation: Situation | null;

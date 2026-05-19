@@ -23,6 +23,14 @@ interface StateMeta {
   isDeregulated: boolean;
 }
 
+// react-simple-maps + d3-geo ship without TS types; this captures only the
+// fields we read off each feature. geoCentroid / <Geography> accept the raw
+// runtime shape regardless.
+interface GeoFeature {
+  rsmKey: string;
+  properties: { name: string };
+}
+
 export function UsMapPicker({ value, onChange }: UsMapPickerProps) {
   const selectedSet = useMemo(() => new Set(value), [value]);
 
@@ -65,7 +73,7 @@ export function UsMapPicker({ value, onChange }: UsMapPickerProps) {
           style={{ width: "100%", height: "auto" }}
         >
           <Geographies geography={GEO_URL}>
-            {({ geographies }: { geographies: any[] }) => (
+            {({ geographies }: { geographies: GeoFeature[] }) => (
               <>
                 {/* Pass 1: filled state shapes (click targets) */}
                 {geographies.map((geo) => {

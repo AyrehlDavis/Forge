@@ -69,7 +69,7 @@ export function LandingHero() {
           />
           <OutcomeChip
             label="Go Direct"
-            eyebrow="If your needs are simple"
+            eyebrow="If energy cost isn't a priority"
             tone="secondary"
             className="absolute right-0 top-[35%]"
             rot={4}

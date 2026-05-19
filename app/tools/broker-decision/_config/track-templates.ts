@@ -20,7 +20,7 @@ const TRACK_A: TrackContent = {
   explanation: (v) =>
     `With ${v.locationLabel} across ${v.stateCount} ${
       v.stateCount === 1 ? "state" : "states"
-    }, you're managing enough complexity that a broker earns the fee. Competitive bidding, contract negotiation, and ongoing market monitoring take real time to do yourself — and you'd likely leave money on the table.`,
+    }, you've got enough moving pieces — competitive bidding, multi-state contracts, renewal timing — that bringing in a broker pays off. You can do it yourself, but it's real, ongoing work, and one missed renewal can lock you into a worse rate for years.`,
   whyBullets: (v) => [
     {
       label: `${v.locationLabel} means negotiation leverage.`,

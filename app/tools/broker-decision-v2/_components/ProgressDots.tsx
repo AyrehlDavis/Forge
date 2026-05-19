@@ -8,6 +8,8 @@ interface ProgressDotsProps {
 
 export function ProgressDots({ inputs }: ProgressDotsProps) {
   const steps = [
+    { id: "step-spend", label: "Spend", done: inputs.spend !== null },
+    { id: "step-location", label: "Sites", done: inputs.locationCount !== null },
     { id: "step-states", label: "States", done: inputs.states.length > 0 },
     { id: "step-priority", label: "Priority", done: inputs.priority !== null },
     { id: "step-timing", label: "Timing", done: inputs.situation !== null },

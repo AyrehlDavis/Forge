@@ -1,8 +1,10 @@
 import { getState, getStateName } from "../_config/states";
 import type {
   DerivedFlags,
+  LocationCount,
   Priority,
   Recommendation,
+  Spend,
   V2Inputs,
   V2RecommendationOutput,
   V2ResultMetrics,
@@ -13,6 +15,30 @@ const PRIORITY_LABELS: Record<Priority, string> = {
   risk_management: "risk management",
   simplicity: "simplicity",
   sustainability: "sustainability",
+};
+
+const SPEND_LABELS: Record<Spend, string> = {
+  under_50k: "Under $50K",
+  "50k_250k": "$50K–$250K",
+  "250k_1m": "$250K–$1M",
+  over_1m: "Over $1M",
+};
+
+// Representative midpoint for each bucket — used only for the directional
+// savings stat. Buckets are intentionally coarse; the result page surfaces
+// this as "directional" not exact.
+const SPEND_MIDPOINTS: Record<Spend, number> = {
+  under_50k: 25_000,
+  "50k_250k": 150_000,
+  "250k_1m": 625_000,
+  over_1m: 1_500_000,
+};
+
+const LOCATION_LABELS: Record<LocationCount, string> = {
+  "1": "a single site",
+  "2-10": "2-10 sites",
+  "11-50": "11-50 sites",
+  "50+": "50+ sites",
 };
 
 function deriveFlags(input: V2Inputs): DerivedFlags {
@@ -26,17 +52,20 @@ function deriveFlags(input: V2Inputs): DerivedFlags {
   const hasDereg = dereg.length > 0;
   const hasReg = reg.length > 0;
 
+  const spend = input.spend;
+  const loc = input.locationCount;
+
   return {
     hasDeregulatedState: hasDereg,
     hasRegulatedState: hasReg,
     marketMixed: hasDereg && hasReg,
     marketAllRegulated: !hasDereg && hasReg,
     marketAllDereg: hasDereg && !hasReg,
-    highSpend: input.annualSpend >= 250_000,
-    midSpend: input.annualSpend >= 50_000 && input.annualSpend < 250_000,
-    lowSpend: input.annualSpend < 50_000,
-    multiSite: input.siteCount > 1,
-    manySites: input.siteCount >= 6,
+    highSpend: spend === "250k_1m" || spend === "over_1m",
+    midSpend: spend === "50k_250k",
+    lowSpend: spend === "under_50k",
+    multiSite: loc !== null && loc !== "1",
+    manySites: loc === "11-50" || loc === "50+",
     multiState: input.states.length > 1,
   };
 }
@@ -53,7 +82,7 @@ function chooseRecommendation(
   if (flags.marketMixed && flags.multiSite) return "hybrid";
 
   // High-leverage broker cases
-  if (input.annualSpend >= 1_000_000) return "broker";
+  if (input.spend === "over_1m") return "broker";
   if (flags.manySites) return "broker";
   if (flags.multiState && flags.hasDeregulatedState) return "broker";
   if (
@@ -97,13 +126,17 @@ function chooseRecommendation(
   return flags.hasDeregulatedState ? "hybrid" : "regulated";
 }
 
+function spendMidpoint(spend: Spend | null): number {
+  return spend ? SPEND_MIDPOINTS[spend] : 0;
+}
+
 function estSavings(input: V2Inputs, rec: Recommendation): number | null {
-  // V2 surfaces a directional estimate, not a guarantee. Numbers below are
-  // illustrative bands derived from broker-typical 4-8% effective negotiation
-  // delta on supply spend (~50-60% of total bill). Phase 6 TEA flags this for
-  // sourcing validation before production launch.
+  // V2 surfaces a directional estimate, not a guarantee. Bucket midpoints
+  // approximate the spend dimension; Phase 6 TEA flags this for sourcing
+  // validation before production launch.
   const supplySpendShare = 0.55;
-  const effectiveSupply = input.annualSpend * supplySpendShare;
+  const midpoint = spendMidpoint(input.spend);
+  const effectiveSupply = midpoint * supplySpendShare;
   switch (rec) {
     case "broker":
       return Math.round((effectiveSupply * 0.07) / 100) * 100;
@@ -112,9 +145,7 @@ function estSavings(input: V2Inputs, rec: Recommendation): number | null {
     case "direct":
       return Math.round((effectiveSupply * 0.025) / 100) * 100;
     case "regulated":
-      // Savings in regulated markets come from tariff optimization +
-      // efficiency, not supplier swap. Direction only.
-      return Math.round((input.annualSpend * 0.03) / 100) * 100;
+      return Math.round((midpoint * 0.03) / 100) * 100;
   }
 }
 
@@ -131,15 +162,12 @@ function daysToAct(input: V2Inputs): string {
   return "60-90 days";
 }
 
-function fmtSpend(n: number): string {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1)}M`;
-  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`;
-  return `$${n}`;
+function fmtSpendBucket(spend: Spend | null): string {
+  return spend ? SPEND_LABELS[spend] : "your spend range";
 }
 
-function fmtSiteCount(n: number): string {
-  if (n === 1) return "a single site";
-  return `${n} sites`;
+function fmtLocationBucket(loc: LocationCount | null): string {
+  return loc ? LOCATION_LABELS[loc] : "your portfolio";
 }
 
 function fmtStateMix(states: string[], flags: DerivedFlags): string {
@@ -161,14 +189,14 @@ function buildHeadline(
   rec: Recommendation,
   flags: DerivedFlags,
 ): string {
-  const spend = fmtSpend(input.annualSpend);
-  const sites = fmtSiteCount(input.siteCount);
+  const spend = fmtSpendBucket(input.spend);
+  const sites = fmtLocationBucket(input.locationCount);
   const mix = fmtStateMix(input.states, flags);
   switch (rec) {
     case "broker":
-      return `For ${spend} across ${sites} ${mix}, a broker earns its keep.`;
+      return `For ${spend} of spend across ${sites} ${mix}, a broker earns its keep.`;
     case "direct":
-      return `For a ${spend} single site ${mix}, you can do this yourself.`;
+      return `For ${spend} at ${sites} ${mix}, you can do this yourself.`;
     case "hybrid":
       return flags.marketMixed
         ? `Your ${sites} portfolio splits across markets — a hybrid approach moves faster.`
@@ -188,13 +216,14 @@ function buildWhy(
   const priorityLabel = input.priority
     ? PRIORITY_LABELS[input.priority]
     : "lowest cost";
-  const spend = fmtSpend(input.annualSpend);
+  const spend = fmtSpendBucket(input.spend);
+  const sites = fmtLocationBucket(input.locationCount);
 
   switch (rec) {
     case "broker":
       return [
         flags.multiSite
-          ? `${input.siteCount} sites means real negotiation leverage — brokers convert that into supplier competition.`
+          ? `${sites} means real negotiation leverage — brokers convert that into supplier competition.`
           : `${spend} of annual spend is enough that broker fees are absorbed by what they negotiate.`,
         flags.multiState
           ? `Multiple states means multiple market rules — a broker navigates that without you doing the homework.`

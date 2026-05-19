@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Interstitial } from "./_components/Interstitial";
 import { ProgressDots } from "./_components/ProgressDots";
@@ -12,8 +13,8 @@ import type { V2Inputs, V2RecommendationOutput } from "./_lib/types";
 type Phase = "form" | "analyzing" | "result";
 
 const EMPTY_INPUTS: V2Inputs = {
-  annualSpend: 480_000,
-  siteCount: 3,
+  spend: null,
+  locationCount: null,
   states: [],
   priority: null,
   situation: null,
@@ -62,7 +63,7 @@ export function BrokerDecisionV2() {
       <div className="v2-mesh fixed inset-0 -z-10" aria-hidden />
 
       <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 sm:px-8">
-        <a
+        <Link
           href="/"
           className="flex items-center gap-2.5 transition-opacity hover:opacity-80 focus:outline-none focus-visible:opacity-80"
         >
@@ -77,7 +78,7 @@ export function BrokerDecisionV2() {
           <span className="text-sm font-normal text-[var(--v2-text-tertiary)]">
             / Forge
           </span>
-        </a>
+        </Link>
         <nav className="hidden items-center gap-7 text-sm text-[var(--v2-text-secondary)] sm:flex">
           <a
             href="#"
