@@ -66,14 +66,14 @@ const LOCATION_LABEL: Record<LocationCount, string> = {
 };
 const PRIORITY_LABEL: Record<Priority, string> = {
   balanced_price_risk: "Balanced",
-  price_first: "Lower cost",
+  price_first: "Hands on",
   budget_certainty: "Certainty",
-  handled_for_me: "Hands off",
+  handled_for_me: "Little effort",
 };
 const SITUATION_LABEL: Record<Situation, string> = {
   shopping_now: "Shopping now",
   renewal_soon: "Renewal soon",
-  contract_6_plus_months: "6+ months out",
+  contract_6_plus_months: "Tracking",
   always_in_market: "Always in market",
 };
 
@@ -155,8 +155,8 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
         Your meeting kit
       </p>
-      <h3 className="mt-2 text-xl font-semibold leading-snug text-slate-900 sm:text-2xl">
-        Built from your five answers — ready for your next call.
+      <h3 className="mt-1.5 text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
+        Maximize the value of your next energy contract.
       </h3>
 
       {voucher && <Voucher voucher={voucher} />}
@@ -165,7 +165,7 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
       {chips.length > 0 && (
         <ul
           aria-label="Personalization details used"
-          className="mt-5 flex flex-wrap gap-2"
+          className="mt-4 flex flex-wrap gap-2"
         >
           {chips.map((chip) => (
             <li
@@ -180,7 +180,7 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
 
       {/* Unified deliverable card — meeting kit + market snapshot in a
           single intentional surface. Visually light, no dense data rows. */}
-      <div className="mt-6">
+      <div className="mt-4">
         <DeliverableCard
           title={asset.title}
           body={asset.body}
@@ -190,14 +190,14 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
         />
       </div>
 
-      <p className="mt-6 text-sm font-semibold leading-6 text-slate-900">
+      <p className="mt-4 text-sm font-semibold leading-6 text-slate-900">
         We won&apos;t call you from this form.{" "}
         <span className="font-medium text-slate-600">
           Reply if you want help with the numbers.
         </span>
       </p>
 
-      <form onSubmit={handleSubmit} noValidate className="mt-4 flex flex-col gap-3">
+      <form onSubmit={handleSubmit} noValidate className="mt-3 flex flex-col gap-2.5">
         <label htmlFor="lead-email" className="sr-only">
           Work email address
         </label>
@@ -262,8 +262,8 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
           {subjectLine}
         </p>
         <p id="lead-privacy" className="text-xs leading-relaxed text-slate-500">
-          One email. We won&apos;t sell your address or drip-market you. The
-          email includes a one-click unsubscribe.
+          One email. We won&apos;t sell your address. The email includes a
+          one-click unsubscribe.
         </p>
         {status === "error" && (
           <div className="mt-1 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
@@ -343,9 +343,9 @@ function DeliverableCard({
   return (
     <article
       data-temp="magnet-deliverable-card"
-      className="overflow-hidden rounded-[16px] border border-slate-200 bg-white"
+      className="overflow-hidden rounded-[10px] border border-slate-200 bg-white"
     >
-      <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-[160px_1fr] sm:items-center sm:gap-7 sm:p-8">
+      <div className="grid grid-cols-1 gap-5 p-5 sm:grid-cols-[120px_1fr] sm:items-center sm:gap-6 sm:p-6">
         <div className="flex justify-center sm:justify-start">
           <DeliverableLockup stateName={stateName} />
         </div>
@@ -384,7 +384,7 @@ function DeliverableLockup({ stateName }: { stateName: string }) {
     >
       <div
         className="relative overflow-hidden rounded-[6px] border border-slate-200 bg-white shadow-[0_4px_16px_-4px_rgba(15,23,42,0.12)]"
-        style={{ width: 140, height: 181 }}
+        style={{ width: 112, height: 145 }}
       >
         <div className="absolute inset-x-0 top-0 h-[3px] bg-[#007fe8]" />
         <div className="flex h-full flex-col justify-between px-4 pb-4 pt-5">

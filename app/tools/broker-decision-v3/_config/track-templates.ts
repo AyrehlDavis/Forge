@@ -3,7 +3,7 @@ import type { Priority, Track } from "../_lib/types";
 export const TRACK_LABELS: Record<Track, string> = {
   A_use_broker: "Use a broker",
   B_go_direct: "Go direct",
-  C_regulated: "Regulated market",
+  C_regulated: "Local Utility",
 };
 
 // V3 result cards use these accents. Each accent meets WCAG AA on white text.
@@ -47,6 +47,10 @@ interface CloseTemplate {
 
 // Full 4x4 priority × track matrix per Warlock V3 synthesized copy.
 // Several cells share base copy via collapse rules (see warlock-v3-copy.md §3).
+// TODO V3.7 — Warlock raid in flight for "we ARE the broker" reframe per
+// Chris's 2026-05-20 notes. Current "we'd look for a broker who..." framing
+// is wrong; new framing is "we'd review your portfolio, create a strategy,
+// review supplier products, etc." Do not edit copy below until raid lands.
 const CLOSES: Record<Track, Record<PriorityKey, CloseTemplate>> = {
   A_use_broker: {
     balanced_price_risk: {

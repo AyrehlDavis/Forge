@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { getState, getStateName } from "../_config/states";
 import { TRACK_ACCENTS } from "../_config/track-templates";
 import type { Track, V3Inputs, V3Recommendation } from "../_lib/types";
@@ -9,6 +9,10 @@ import { TexasOutline } from "./TexasOutline";
 interface ResultCardProps {
   result: V3Recommendation;
   onReset: () => void;
+  // Inline meeting-kit content rendered as the final section of the card.
+  // Lets the verdict + recommendation + meeting kit live in one continuous
+  // artifact instead of two stacked cards.
+  magnet?: ReactNode;
 }
 
 // Time-saved derivation — directional hours the buyer gets back by following
@@ -106,7 +110,7 @@ function buildMetadataRail(inputs: V3Inputs, track: Track): string {
 
 // Source-stamp footer — transforms the card from feature-checklist to
 // generated document. Date formatted en-US locale per spec.
-const SOURCE_STAMP_DATE = "May 19, 2026";
+const SOURCE_STAMP_DATE = "May 20, 2026";
 
 function buildSourceStamp(inputs: V3Inputs): string {
   const inputCount =
@@ -133,7 +137,7 @@ function buildSourceStamp(inputs: V3Inputs): string {
   return `Generated from ${inputCount} inputs · ${marketDescriptor} · ${SOURCE_STAMP_DATE}`;
 }
 
-export function ResultCard({ result, onReset }: ResultCardProps) {
+export function ResultCard({ result, onReset, magnet }: ResultCardProps) {
   const ref = useRef<HTMLElement>(null);
   const accent = TRACK_ACCENTS[result.track];
   const accentColor = trackAccent(result.track);
@@ -159,10 +163,12 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
       className="v3-verdict-rise overflow-hidden rounded-[16px] border border-[#D7E3F0] bg-[#F8FBFE] shadow-[0_24px_70px_rgba(15,35,60,0.10)] focus:outline-none"
     >
       {/* Verdict band — instrument panel posture. TX linework right-side
-          watermark; mono metadata rail above title; outlined timing chip. */}
+          watermark; mono metadata rail above title; outlined timing chip.
+          Trimmed: padding scaled down + title comes down from 60→48 max
+          so the band doesn't dominate the merged artifact. */}
       <header
         style={{ background: accent.headerBg }}
-        className="relative overflow-hidden px-6 py-10 text-white sm:px-10 sm:py-12 lg:px-12 lg:py-14"
+        className="relative overflow-hidden px-6 py-7 text-white sm:px-8 sm:py-8 lg:px-10 lg:py-10"
       >
         {/* Texas linework watermark — only for TX results. Right side, faint. */}
         {result.inputs.states.length === 1 &&
@@ -170,7 +176,7 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
             <div
               aria-hidden
               data-temp="verdict-band-tx-overlay"
-              className="absolute right-6 top-6 hidden h-[170px] w-[190px] text-white opacity-20 sm:block lg:right-8 lg:top-8"
+              className="absolute right-5 top-5 hidden h-[130px] w-[145px] text-white opacity-20 sm:block lg:right-6 lg:top-6"
             >
               <TexasOutline className="h-full w-full" strokeWidth={1.5} />
               <span className="absolute bottom-1 left-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/55">
@@ -185,22 +191,21 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
         >
           {buildMetadataRail(result.inputs, result.track)}
         </p>
-        <h3 className="mt-4 text-[40px] font-semibold leading-[1.02] tracking-tight sm:text-[52px] lg:text-[60px]">
+        <h2 className="mt-3 text-[32px] font-semibold leading-[1.02] tracking-tight sm:text-[40px] lg:text-[48px]">
           {result.trackLabel}
-        </h3>
-        <p className="mt-5 max-w-[520px] text-base leading-relaxed text-white/90 sm:text-lg">
+        </h2>
+        <p className="mt-3 max-w-[520px] text-sm leading-relaxed text-white/90 sm:text-base">
           {result.headline}
         </p>
-        <div className="mt-5 h-px max-w-[520px] bg-white/20" aria-hidden />
         {result.timingChip && (
-          <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/30 bg-transparent px-3 py-1 text-xs font-medium text-white">
+          <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-transparent px-3 py-1 text-xs font-medium text-white">
             <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-white" />
             {result.timingChip}
           </p>
         )}
       </header>
 
-      <div className="space-y-10 px-6 py-8 sm:space-y-12 sm:px-8 sm:py-10">
+      <div className="space-y-7 px-6 py-6 sm:space-y-8 sm:px-8 sm:py-7">
         {/* Meter-gauge stat block — 12 ticks behind the value, filled progress
             rule, comparative-day chip. Track-accent color carries through. */}
         <MeterStat
@@ -213,13 +218,13 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
         />
 
         {/* Why-trace — mono numbered signal rows. No eyebrow; hairline
-            separators between rows. */}
+            separators between rows. Compressed py-4 → py-3. */}
         <section aria-label="Reasoning">
           <ol className="divide-y divide-[#D8E6F5] border-t border-[#D8E6F5]">
             {result.whyBullets.map((b, i) => (
               <li
                 key={i}
-                className="grid grid-cols-[40px_1fr] gap-x-4 py-4"
+                className="grid grid-cols-[40px_1fr] gap-x-4 py-3"
               >
                 <span
                   className="label-number"
@@ -228,7 +233,7 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <p className="text-[15px] leading-relaxed text-slate-600">
+                <p className="text-sm leading-relaxed text-slate-600">
                   <span className="font-semibold text-slate-900">
                     {b.label.replace(/[.]\s*$/, "")}
                   </span>
@@ -241,21 +246,22 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
         </section>
 
         {/* Presumptive close — advisor note posture. 5px brand-blue left
-            rule, monogram circle, paragraph hangs from the rule. */}
+            rule, monogram circle, paragraph hangs from the rule.
+            Heading promoted h4 → h3 to nest correctly under the H2 verdict. */}
         <section
           aria-labelledby="presumptive-close-heading"
           style={{ borderLeftColor: accentColor }}
-          className="rounded-[10px] border-l-[5px] bg-[#F6FAFD] p-6 pl-7"
+          className="rounded-[10px] border-l-[5px] bg-[#F6FAFD] p-5 pl-6"
         >
           <div className="flex items-center gap-3">
             <span
               aria-hidden
               style={{ backgroundColor: accentColor }}
-              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
             >
               A
             </span>
-            <h4
+            <h3
               id="presumptive-close-heading"
               className="text-[11px] font-semibold uppercase tracking-[0.16em]"
               style={{ color: accentColor }}
@@ -264,14 +270,15 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
               <span className="ml-2 text-[11px] font-normal tracking-normal text-slate-500">
                 — from the Arise team
               </span>
-            </h4>
+            </h3>
           </div>
-          <p className="mt-4 max-w-[560px] text-base leading-relaxed text-[#0A1F1F]">
+          <p className="mt-3 max-w-[560px] text-sm leading-relaxed text-[#0A1F1F]">
             {result.presumptiveClose.body}
           </p>
-          <div className="mt-5">
+          <div className="mt-4">
             <button
               type="button"
+              data-temp="check-risk-plan-target"
               className="v3-pill-primary inline-flex h-10 items-center justify-center gap-2 px-5 text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
             >
               {result.presumptiveClose.cta}
@@ -279,6 +286,14 @@ export function ResultCard({ result, onReset }: ResultCardProps) {
             </button>
           </div>
         </section>
+
+        {/* Meeting-kit handoff — inline LeadMagnet rendered as the final
+            section. Separator above it visually links the verdict + kit. */}
+        {magnet && (
+          <section className="-mx-6 border-t border-slate-200/80 px-6 pt-6 sm:-mx-8 sm:px-8 sm:pt-7">
+            {magnet}
+          </section>
+        )}
 
         {/* Footer ladder + source stamp. Track-accent on the See-questions
             link. Edit-answers demoted. Source stamp reads as a generated
@@ -334,7 +349,7 @@ function MeterStat({
   return (
     <div
       data-temp="result-stat-time-saved"
-      className="relative overflow-hidden rounded-[10px] border border-[#D7E3F0] bg-white p-6 sm:p-7"
+      className="relative overflow-hidden rounded-[10px] border border-[#D7E3F0] bg-white p-5"
     >
       <div className="flex items-baseline justify-between gap-3">
         <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
@@ -346,10 +361,10 @@ function MeterStat({
       </div>
 
       {/* Value + meter ticks layered */}
-      <div className="relative mt-4">
+      <div className="relative mt-3">
         <div
           aria-hidden
-          className="absolute inset-x-0 top-1/2 flex h-[58px] -translate-y-1/2 items-center justify-between"
+          className="absolute inset-x-0 top-1/2 flex h-[46px] -translate-y-1/2 items-center justify-between"
         >
           {Array.from({ length: 12 }).map((_, i) => (
             <span
@@ -357,7 +372,7 @@ function MeterStat({
               style={{
                 backgroundColor: accentColor,
                 opacity: 0.16,
-                height: i % 2 === 0 ? "58px" : "36px",
+                height: i % 2 === 0 ? "46px" : "28px",
                 width: "1px",
               }}
               className="block"
@@ -365,7 +380,7 @@ function MeterStat({
           ))}
         </div>
         <div
-          className="relative text-[56px] font-semibold leading-none tracking-[-0.02em] tabular-nums sm:text-[64px] lg:text-[72px]"
+          className="relative text-[40px] font-semibold leading-none tracking-[-0.02em] tabular-nums sm:text-[48px] lg:text-[56px]"
           style={{ color: accentColor }}
         >
           {value}
@@ -373,7 +388,7 @@ function MeterStat({
       </div>
 
       {/* Progress rule */}
-      <div className="relative mt-5 h-[3px] w-full rounded-full bg-[#E5EEF7]">
+      <div className="relative mt-4 h-[3px] w-full rounded-full bg-[#E5EEF7]">
         <div
           className="absolute left-0 top-0 h-full rounded-full"
           style={{
@@ -384,10 +399,10 @@ function MeterStat({
         />
       </div>
 
-      <p className="mt-4 max-w-[560px] text-[13px] leading-snug text-slate-600">
+      <p className="mt-3 max-w-[560px] text-[13px] leading-snug text-slate-600">
         {caption}
       </p>
-      <span className="mt-3 inline-flex items-center rounded-full border border-[#D7E3F0] bg-white px-3 py-1 text-[11px] font-medium text-slate-700">
+      <span className="mt-2 inline-flex items-center rounded-full border border-[#D7E3F0] bg-white px-3 py-1 text-[11px] font-medium text-slate-700">
         {comparative}
       </span>
     </div>

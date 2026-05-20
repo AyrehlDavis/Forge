@@ -9,27 +9,14 @@ interface Stat {
   tempKey: string;
 }
 
+// Real numbers per Chris's 2026-05-20 pass. "Contracts reviewed" dropped
+// entirely — we have no real number for it. All four values are canonical
+// (no data-temp markers); the keys here are React render keys, not temp tags.
 const STATS: Stat[] = [
-  {
-    value: "$2.4B",
-    label: "in contracts reviewed",
-    tempKey: "stat-contracts-reviewed",
-  },
-  {
-    value: "50",
-    label: "states covered",
-    tempKey: "stat-state-coverage",
-  },
-  {
-    value: "12 yr",
-    label: "avg supplier tenure",
-    tempKey: "stat-supplier-tenure",
-  },
-  {
-    value: "847",
-    label: "brokers in our database",
-    tempKey: "stat-broker-database",
-  },
+  { value: "700+", label: "businesses served", tempKey: "stat-businesses" },
+  { value: "22", label: "active suppliers", tempKey: "stat-suppliers" },
+  { value: "35", label: "markets covered", tempKey: "stat-markets" },
+  { value: "20+", label: "supplier relationships", tempKey: "stat-relationships" },
 ];
 
 export function StatStrip() {
@@ -43,7 +30,6 @@ export function StatStrip() {
           {STATS.map((s) => (
             <li
               key={s.tempKey}
-              data-temp={s.tempKey}
               className="flex flex-col items-start gap-1"
             >
               <span className="text-[26px] font-semibold leading-none tracking-tight tabular-nums text-slate-900 sm:text-[30px] lg:text-[34px]">
@@ -55,9 +41,6 @@ export function StatStrip() {
             </li>
           ))}
         </ol>
-        <p className="mt-3 text-[10px] uppercase tracking-[0.16em] text-slate-400">
-          Illustrative · pending production data
-        </p>
       </div>
     </section>
   );

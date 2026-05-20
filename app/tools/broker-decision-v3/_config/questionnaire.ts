@@ -57,38 +57,46 @@ export const LOCATION_OPTIONS: Array<SelectionOption<LocationCount>> = [
   },
 ];
 
+// Priority labels per Chris's 2026-05-20 pass. Engine routing keys (value
+// field) preserved so recommend.ts logic doesn't need to change — only the
+// user-facing label + descriptor swap. Mapping:
+//   budget_certainty   → "Budget certainty"     (locked-in price)
+//   handled_for_me     → "Little effort"        (hands off — broker does the work)
+//   price_first        → "Willing to get hands on"  (minimize cost via effort)
+//   balanced_price_risk → "Balanced"             (effort if value is clear)
 export const PRIORITY_OPTIONS: Array<SelectionOption<Priority>> = [
-  {
-    value: "balanced_price_risk",
-    label: "Balanced price and risk",
-    descriptor:
-      "I want a fair rate, but I don't want to buy at the wrong time.",
-  },
-  {
-    value: "price_first",
-    label: "Lower total cost",
-    descriptor:
-      "I want to lower what I pay — including fees and pass-through costs, not just the headline rate.",
-  },
   {
     value: "budget_certainty",
     label: "Budget certainty",
-    descriptor:
-      "I'd rather lock in a clear price than chase every market move.",
+    descriptor: "Lock in a clear price — predictable budget over a clear move.",
   },
   {
     value: "handled_for_me",
-    label: "Handle it for me",
+    label: "Little effort",
+    descriptor: "Hands off. I want Arise to watch the market and tell me when to act.",
+  },
+  {
+    value: "price_first",
+    label: "Willing to get hands on",
+    descriptor: "To minimize the cost — I'll do the work if it saves real money.",
+  },
+  {
+    value: "balanced_price_risk",
+    label: "Balanced",
     descriptor:
-      "I want Arise to pull the data, watch the market, and tell me when to act.",
+      "Open to putting in effort if there's a clear, definable value.",
   },
 ];
 
+// Situation labels per Chris's 2026-05-20 pass. Two labels are Chris's
+// verbatim copy (shopping_now + contract_6_plus_months). The remaining two
+// (renewal_soon + always_in_market) are kept from prior copy pending a Chris
+// pass — flagged in the V3.6 report so Forge LP1 can surface the gap.
 export const SITUATION_OPTIONS: Array<SelectionOption<Situation>> = [
   {
     value: "shopping_now",
     label: "Shopping now",
-    descriptor: "I need a new contract or supplier choice soon.",
+    descriptor: "I need a new contract or choose a supplier soon.",
   },
   {
     value: "renewal_soon",
@@ -97,9 +105,9 @@ export const SITUATION_OPTIONS: Array<SelectionOption<Situation>> = [
   },
   {
     value: "contract_6_plus_months",
-    label: "Contract is 6+ months out",
+    label: "Tracking the market",
     descriptor:
-      "I'm not buying today, but I want to be ready before the window opens.",
+      "I'm not buying today, but I want to start tracking to ensure I don't miss a good window.",
   },
   {
     value: "always_in_market",

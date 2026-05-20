@@ -2,26 +2,49 @@
 
 import { useCallback, useRef, useState } from "react";
 
-const FAQS = [
+// FAQ copy per Chris's 2026-05-20 verbatim pass. Constellation parentage is
+// now explicitly IN (reverses the earlier SKIP default). Privacy-policy link
+// renders as a placeholder href="#" with data-temp marker until the real URL
+// is provided. Render content as React nodes (not strings) so the privacy
+// answer can include the inline link.
+interface Faq {
+  q: string;
+  a: React.ReactNode;
+}
+
+const FAQS: Faq[] = [
   {
     q: "Is this really free?",
-    a: "Yes. No signup, no card. You only share an email if you ask for the printable strategies and your market snapshot.",
+    a: "The only time Arise is paid is if you choose to buy energy from a supplier where we facilitate the transaction. This is how the industry works, we monitor the market, work with suppliers to get pricing, compare the products and contracts and provide a recommendation based on your goals. If you choose to sign with a supplier, we receive a fee directly from the supplier. We will always be transparent on our fees. If a broker tells you there is no cost for the service, they are hiding the fact that they set the fee and the supplier pays them versus you the customer.",
   },
   {
-    q: "Why would an energy supplier tell me when not to use them?",
-    a: "We're a supplier — we make money when you sign with us. We're also part of Constellation, the largest competitive supplier in the U.S. Telling you the honest answer (even when it's \"go direct\") builds the kind of trust that wins business over time. Bad advice doesn't.",
+    q: "Why would an energy broker tell me when not to use them?",
+    a: "We're a broker we make money when you sign a contract through us. We're also part of Constellation, the largest competitive supplier in the U.S. Telling you the honest answer (even when it's \"go direct\") builds the kind of trust that wins business over time. Bad advice doesn't.",
   },
   {
     q: "How accurate is the recommendation?",
-    a: "It's a pattern-match on your spend, footprint, states, priority, and timing. Not personalized advice — but a useful starting point. The checklist is the part that travels with you into any sales call.",
+    a: "It's a pattern-match on your spend, footprint, states, priority, and timing. Not personalized advice — but a useful starting point. Happy to chat more about your options in the market and support you in your journey.",
   },
   {
     q: "What if my situation doesn't fit any of these?",
-    a: "Most don't perfectly. The tool gives you a framework, not a final answer. If you want a real conversation, send an invoice or use the CTA below.",
+    a: "The tool is a framework for the decision, but we understand every organization is slightly different, let's chat, we are happy to share our decades of experience and point you in the right direction.",
   },
   {
-    q: "Will you sell my email or drip-market me?",
-    a: "No. One email with your checklist and recommendation. That's it.",
+    q: "Will you sell my email?",
+    a: (
+      <>
+        No we are not in the business to share data and have a tight policy
+        around this{" "}
+        <a
+          href="#"
+          data-temp="faq-privacy-policy-link"
+          className="text-[#006bc5] underline-offset-4 hover:underline focus:outline-none focus-visible:underline"
+        >
+          (privacy policy)
+        </a>
+        .
+      </>
+    ),
   },
 ];
 

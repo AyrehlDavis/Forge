@@ -17,7 +17,7 @@ export function Hero() {
             style={{ animationDelay: "160ms" }}
             className="v3-hero-rise mt-5 max-w-[540px] text-base leading-7 text-slate-600 sm:text-lg sm:leading-8"
           >
-            Answer five questions. See whether to use a broker, go direct, or let Arise watch the market for you.
+            Answer five questions. See whether to use a broker, go direct based on your footprint and goals.
           </p>
           <div style={{ animationDelay: "240ms" }} className="v3-hero-rise mt-7">
             <a
@@ -58,7 +58,7 @@ function HeroArtifact() {
       <div className="mt-6 flex flex-col gap-3">
         <PathOrb hint="If your portfolio is complex" label="Use a broker" tone="primary" delay={280} />
         <PathOrb hint="If energy cost isn't a priority" label="Go direct" tone="cyan" delay={360} />
-        <PathOrb hint="If you're in a regulated state" label="Regulated market" tone="neutral" delay={440} />
+        <PathOrb hint="If you're in a regulated state" label="Local Utility" tone="neutral" delay={440} />
       </div>
 
       <p className="mt-6 text-xs leading-5 text-slate-500">

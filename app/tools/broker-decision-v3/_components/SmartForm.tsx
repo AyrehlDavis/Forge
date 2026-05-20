@@ -118,10 +118,10 @@ function chipFor(step: number, inputs: V3Inputs): ChipFacts | null {
       const v = inputs.priority;
       if (!v) return null;
       const map: Record<Priority, Omit<ChipFacts, "short">> = {
-        balanced_price_risk: { answer: "Balanced", signal: "Risk-aware", tone: "cyan" },
-        price_first: { answer: "Lower cost", signal: "Price focus", tone: "cyan" },
+        balanced_price_risk: { answer: "Balanced", signal: "Value-driven", tone: "cyan" },
+        price_first: { answer: "Hands on", signal: "Cost focus", tone: "cyan" },
         budget_certainty: { answer: "Certainty", signal: "Lock & forget", tone: "cyan" },
-        handled_for_me: { answer: "Handle it", signal: "Managed lean", tone: "cyan" },
+        handled_for_me: { answer: "Little effort", signal: "Managed lean", tone: "cyan" },
       };
       return { short: "Priority", ...map[v] };
     }
@@ -131,7 +131,7 @@ function chipFor(step: number, inputs: V3Inputs): ChipFacts | null {
       const map: Record<Situation, Omit<ChipFacts, "short">> = {
         shopping_now: { answer: "Shopping now", signal: "Active buy", tone: "cyan" },
         renewal_soon: { answer: "Renewal soon", signal: "Window opening", tone: "cyan" },
-        contract_6_plus_months: { answer: "6+ months out", signal: "Watching", tone: "cyan" },
+        contract_6_plus_months: { answer: "Tracking", signal: "Watching", tone: "cyan" },
         always_in_market: { answer: "Always in market", signal: "Always live", tone: "cyan" },
       };
       return { short: "Timing", ...map[v] };
@@ -197,11 +197,11 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
       <ChipTrail step={step} total={STEP_COUNT} inputs={inputs} onEdit={setStep} />
 
       <fieldset className="border-0 p-0">
-        <legend className="block text-lg font-semibold text-slate-900 sm:text-xl">
+        <legend className="block text-base font-semibold leading-snug text-slate-900 sm:text-lg">
           {currentMeta.question}
         </legend>
         {currentMeta.helper && (
-          <p className="mt-2 text-sm leading-6 text-slate-600">{currentMeta.helper}</p>
+          <p className="mt-1.5 text-xs leading-5 text-slate-600 sm:text-sm sm:leading-6">{currentMeta.helper}</p>
         )}
 
         <div className="mt-6">
@@ -342,13 +342,13 @@ function ChipTrail({
           key={index}
           type="button"
           onClick={() => onEdit(index)}
-          className="group relative flex flex-col items-start gap-0.5 rounded-[12px] border border-slate-200 bg-white/80 px-3 py-2 text-left shadow-[0_1px_0_rgba(15,23,42,0.04)] transition-all hover:border-arise-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
+          className="group relative flex flex-col items-start gap-0.5 rounded-[10px] border border-slate-200 bg-white/80 px-2.5 py-1.5 text-left shadow-[0_1px_0_rgba(15,23,42,0.04)] transition-all hover:border-arise-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
           aria-label={`${facts.short}: ${facts.answer}. Edit.`}
         >
           <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
             {facts.short}
           </span>
-          <span className="text-sm font-semibold leading-tight text-slate-900">
+          <span className="text-[13px] font-semibold leading-tight text-slate-900">
             {facts.answer}
           </span>
           <span className={`text-[11px] font-medium leading-tight ${SIGNAL_TONE_CLASS[facts.tone]}`}>
@@ -362,11 +362,11 @@ function ChipTrail({
           </span>
         </button>
       ))}
-      <div className="flex flex-col items-start gap-0.5 rounded-[12px] border border-dashed border-[#006bc5]/60 bg-arise-50/60 px-3 py-2">
+      <div className="flex flex-col items-start gap-0.5 rounded-[10px] border border-dashed border-[#006bc5]/60 bg-arise-50/60 px-2.5 py-1.5">
         <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#006bc5]">
           {currentMeta.short} · step {step} of {total}
         </span>
-        <span className="text-sm font-semibold leading-tight text-slate-900">
+        <span className="text-[13px] font-semibold leading-tight text-slate-900">
           In progress…
         </span>
       </div>

@@ -54,7 +54,7 @@ export function BrokerDecisionV3() {
     <section id="broker-check" className="relative pb-16 pt-2 sm:pb-20 sm:pt-2 lg:pb-24 lg:pt-4">
       <div className="relative mx-auto max-w-[1184px] px-5 sm:px-8">
         {phase === "form" && (
-          <div className="rounded-[20px] border border-white/60 bg-white/55 p-5 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-7 lg:p-10">
+          <div className="mx-auto max-w-[820px] rounded-[20px] border border-white/60 bg-white/55 p-4 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-6 lg:p-8">
             <SmartForm onChange={setFormInputs} onSubmit={handleSubmit} />
           </div>
         )}
@@ -62,12 +62,11 @@ export function BrokerDecisionV3() {
         {phase === "analyzing" && <Interstitial />}
 
         {phase === "result" && result && (
-          <div className="space-y-6">
-            <ResultCard result={result} onReset={handleReset} />
-            <div className="rounded-[20px] border border-white/60 bg-white/55 p-5 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-7 lg:p-10">
-              <LeadMagnet result={result} inputs={formInputs} />
-            </div>
-          </div>
+          <ResultCard
+            result={result}
+            onReset={handleReset}
+            magnet={<LeadMagnet result={result} inputs={formInputs} />}
+          />
         )}
       </div>
     </section>

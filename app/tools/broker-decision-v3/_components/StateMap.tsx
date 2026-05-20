@@ -37,14 +37,40 @@ export function StateMap({ value, onChange }: StateMapProps) {
   const hoveredEntry = hovered ? STATES.find((s) => s.code === hovered) : null;
 
   return (
-    <div className="space-y-3" role="group" aria-label="Operating states">
-      <div className="relative rounded-2xl border border-[var(--arise-100)] bg-white/78 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-md">
-        {/* Header bar — title left, live hint right */}
-        <div className="mb-2 flex items-center justify-between gap-3 text-[11px]">
-          <span className="font-medium uppercase tracking-[0.08em] text-[var(--v2-text-tertiary)]">
-            U.S. operating regions
-          </span>
-          <span className="font-medium text-[var(--v2-text-secondary)]" aria-live="polite">
+    <div className="space-y-2" role="group" aria-label="Operating states">
+      <div className="relative rounded-xl border border-[var(--arise-100)] bg-white/78 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-md">
+        {/* Header bar — title + live hint always; legend chips desktop-only.
+            On mobile the legend would wrap into a second row and bloat the
+            header; the state fills already convey competitive vs regulated. */}
+        <div className="mb-1.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[10px]">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[var(--v2-text-tertiary)]">
+            <span className="font-medium uppercase tracking-[0.08em]">
+              U.S. operating regions
+            </span>
+            <span className="hidden items-center gap-1 sm:inline-flex">
+              <span
+                className="inline-block h-2 w-2 rounded-sm border"
+                style={{ backgroundColor: "var(--arise-50)", borderColor: "var(--arise-300)" }}
+                aria-hidden
+              />
+              <span>Competitive</span>
+            </span>
+            <span className="hidden items-center gap-1 sm:inline-flex">
+              <span
+                className="inline-block h-2 w-2 rounded-sm border border-slate-400 bg-slate-100"
+                aria-hidden
+              />
+              <span>Partial</span>
+            </span>
+            <span className="hidden items-center gap-1 sm:inline-flex">
+              <span
+                className="inline-block h-2 w-2 rounded-sm border border-slate-300 bg-white"
+                aria-hidden
+              />
+              <span>Regulated</span>
+            </span>
+          </div>
+          <span className="text-[11px] font-medium text-[var(--v2-text-secondary)]" aria-live="polite">
             {hoveredEntry
               ? `${hoveredEntry.name}${
                   hoveredEntry.isDeregulated
@@ -183,39 +209,6 @@ export function StateMap({ value, onChange }: StateMapProps) {
           })}
         </svg>
 
-        {/* Legend — chips only; hint lives in the header bar above the SVG */}
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] text-[var(--v2-text-tertiary)]">
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block h-2.5 w-2.5 rounded-sm border"
-              style={{ backgroundColor: "var(--arise-50)", borderColor: "var(--arise-300)" }}
-              aria-hidden
-            />
-            <span>Competitive</span>
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block h-2.5 w-2.5 rounded-sm border border-slate-400 bg-slate-100"
-              aria-hidden
-            />
-            <span>Partial</span>
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block h-2.5 w-2.5 rounded-sm border border-slate-300 bg-white"
-              aria-hidden
-            />
-            <span>Regulated</span>
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block h-2.5 w-2.5 rounded-sm border-2"
-              style={{ backgroundColor: "var(--arise-200)", borderColor: "var(--arise-700)" }}
-              aria-hidden
-            />
-            <span>Selected</span>
-          </span>
-        </div>
       </div>
 
       {value.length > 0 && (

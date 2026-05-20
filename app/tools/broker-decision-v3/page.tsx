@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BrokerDecisionV3 } from "./BrokerDecisionV3";
+import { BrokerTransparency } from "./_components/BrokerTransparency";
 import { CtaBand } from "./_components/CtaBand";
 import { FaqSection } from "./_components/FaqSection";
 import { Footer } from "./_components/Footer";
@@ -13,7 +14,7 @@ import { WhyThisMatters } from "./_components/WhyThisMatters";
 export const metadata: Metadata = {
   title: "Should I use an energy broker? — V3 | Arise Energy",
   description:
-    "Answer five questions. See whether to use a broker, go direct, or let Arise watch the market for you.",
+    "Answer five questions. See whether to use a broker, go direct based on your footprint and goals.",
 };
 
 export default function Page() {
@@ -33,6 +34,7 @@ export default function Page() {
           <WhyThisMatters />
           <HowToVet />
           <SocialProof />
+          <BrokerTransparency />
           <FaqSection />
           <CtaBand />
         </main>
