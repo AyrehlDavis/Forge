@@ -11,12 +11,12 @@ export function SiteHeader() {
           className="flex items-center gap-2.5 transition-opacity hover:opacity-80 focus:outline-none focus-visible:opacity-80"
         >
           <Image
-            src="/arise-logo.svg"
+            src="/arise-logo.png"
             alt="Arise Energy"
-            width={100}
-            height={40}
+            width={1330}
+            height={324}
             priority
-            className="h-7 w-auto"
+            className="h-[46px] w-auto"
           />
           <span className="text-sm font-normal text-slate-400">/ Forge</span>
         </Link>

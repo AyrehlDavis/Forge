@@ -64,9 +64,7 @@ export function SupplierBidStack() {
     >
       <header className="flex items-baseline justify-between gap-3 border-b border-slate-200 px-6 py-4 sm:px-8">
         <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Bid stack
-          </span>
+          <span className="label-artifact">Bid stack</span>
           <span className="text-sm font-semibold text-slate-900">
             What four suppliers actually quoted
           </span>
@@ -77,7 +75,7 @@ export function SupplierBidStack() {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-200 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            <tr className="border-b border-slate-200 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-slate-500">
               <th scope="col" className="px-6 py-3 sm:px-8">Supplier</th>
               <th scope="col" className="px-3 py-3 text-right">Rate</th>
               <th scope="col" className="px-3 py-3">Term</th>

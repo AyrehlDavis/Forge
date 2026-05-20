@@ -449,3 +449,41 @@ body {
     0 1px 2px rgba(0, 0, 0, 0.03),
     0 4px 16px rgba(0, 0, 0, 0.05);
 }
+
+/* V3.5 three-token eyebrow system — retires the blanket
+   `text-xs uppercase tracking-[0.18em] text-arise-700` pattern that
+   collapsed every section into one register. Each token signals a
+   different content type. */
+
+/* Energy-domain artifacts (bid stacks, market snapshots, score grids).
+   Mono + light tracking; reads like a procurement label. */
+.label-artifact {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(100 116 139); /* slate-500 */
+}
+
+/* Sentence-case section labels — use sparingly, where the section is a
+   conversational beat (FAQ, "How to vet"). */
+.label-section {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: #006bc5;
+}
+
+/* Numeric markers — list ordinals, step numbers. Mono, tight tracking,
+   slightly hushed so the content next to them holds the eye. */
+.label-number {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: rgb(148 163 184); /* slate-400 */
+  font-variant-numeric: tabular-nums;
+}

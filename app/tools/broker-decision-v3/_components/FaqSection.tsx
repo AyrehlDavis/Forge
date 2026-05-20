@@ -45,10 +45,8 @@ export function FaqSection() {
         <div>
           <div className="flex items-end justify-between gap-4">
             <div className="max-w-[760px]">
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#006bc5]">
-                Common questions
-              </p>
-              <h2 className="mt-4 text-[32px] font-semibold leading-[1.08] tracking-tight text-[#0A1F1F] sm:text-[40px] lg:text-[48px]">
+              <p className="label-section">Common questions</p>
+              <h2 className="mt-4 text-[30px] font-medium leading-[1.1] tracking-[-0.018em] text-[#0A1F1F] sm:text-[36px] lg:text-[42px]">
                 Before you start.
               </h2>
             </div>

@@ -8,10 +8,8 @@ export function SocialProof() {
     <section className="py-14 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-[1184px] px-5 sm:px-8">
         <div className="max-w-[640px]">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
-            What good buyers check first
-          </p>
-          <h2 className="mt-3 text-[26px] font-semibold leading-[1.1] tracking-tight text-slate-900 sm:text-[30px] lg:text-[34px]">
+          <p className="label-artifact">Supplier bid stack</p>
+          <h2 className="mt-3 text-[30px] font-semibold leading-[1.1] tracking-[-0.018em] text-slate-900 sm:text-[34px] lg:text-[40px]">
             Look past the quote.
           </h2>
           <p className="mt-3 max-w-[560px] text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">

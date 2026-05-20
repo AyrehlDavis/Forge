@@ -14,10 +14,9 @@ export function CtaBand() {
 
         <div className="relative flex flex-col items-start gap-8 text-white lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
-              Ready when you are
-            </p>
-            <h2 className="mt-4 text-[32px] font-semibold leading-[1.05] tracking-tight sm:text-[40px] lg:text-[48px]">
+            {/* Eyebrow dropped per V3.5 typography pass — the H2 imperative
+                carries the closing slab without a label. */}
+            <h2 className="text-[32px] font-semibold leading-[1.05] tracking-[-0.024em] sm:text-[40px] lg:text-[48px]">
               Let Arise watch the market for you.
             </h2>
             <p className="mt-5 max-w-xl text-base leading-7 text-white/85 sm:text-lg">

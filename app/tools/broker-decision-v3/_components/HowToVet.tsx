@@ -7,16 +7,18 @@ export function HowToVet() {
     <section id="how-to-vet" className="py-20 sm:py-28 lg:py-36">
       <div className="mx-auto max-w-[1184px] px-5 sm:px-8">
         <div className="max-w-[920px]">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
-            How to vet
-          </p>
-          <h2 className="mt-5 text-[44px] font-semibold leading-[1.02] tracking-tight text-[#0A1F1F] sm:text-[60px] lg:text-[76px]">
+          {/* Eyebrow dropped per V3.5 typography pass — H2 owns the section
+              without a label. Stepped tracking + tightened leading at lg
+              gives the editorial gravity. */}
+          <h2 className="text-[44px] font-semibold leading-[1.02] tracking-[-0.032em] text-[#0A1F1F] sm:text-[60px] sm:leading-[0.98] lg:text-[76px] lg:tracking-[-0.04em]">
             Don&apos;t sign until you ask these questions.
           </h2>
-          <p className="mt-6 max-w-[680px] text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+          <p className="mt-7 max-w-[720px] text-[18px] leading-[1.7] text-slate-600 sm:text-[20px]">
             The right broker can explain how they&apos;re paid, how they pick
             suppliers, and how they&apos;ll handle the renewal you haven&apos;t
-            had to think about yet. The wrong one can&apos;t.
+            had to think about yet. The wrong one can&apos;t. These nine
+            questions separate the brokers worth your time from the ones who
+            won&apos;t survive the call.
           </p>
         </div>
 

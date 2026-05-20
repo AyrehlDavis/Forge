@@ -6,13 +6,13 @@ export function Footer() {
       <div className="mx-auto flex max-w-[1184px] flex-col gap-6 px-5 py-10 text-sm text-slate-500 sm:px-8 sm:py-12 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-3">
           <Image
-            src="/arise-logo.svg"
+            src="/arise-logo.png"
             alt="Arise Energy"
-            width={80}
-            height={32}
-            className="h-6 w-auto"
+            width={1330}
+            height={324}
+            className="h-8 w-auto"
           />
-          <span className="text-xs uppercase tracking-[0.12em] text-slate-400">/ Forge</span>
+          <span className="text-sm font-medium text-slate-400">/ Forge</span>
         </div>
         <p className="max-w-md text-xs leading-6">
           A free decision tool for commercial energy buyers. Arise Energy is part of Constellation, the largest competitive supplier in the U.S.

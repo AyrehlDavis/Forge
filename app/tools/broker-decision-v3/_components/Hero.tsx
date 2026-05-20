@@ -5,15 +5,11 @@ export function Hero() {
     <section className="relative">
       <div className="relative mx-auto grid max-w-[1184px] grid-cols-12 gap-8 px-5 pb-12 pt-12 sm:px-8 lg:gap-12 lg:pb-16 lg:pt-20">
         <div className="col-span-12 self-center lg:col-span-6">
-          <p
-            style={{ animationDelay: "0ms" }}
-            className="v3-hero-rise text-xs font-semibold uppercase tracking-[0.18em] text-[#006bc5]"
-          >
-            Energy buying guide · Forge
-          </p>
+          {/* Eyebrow dropped per V3.5 typography pass — H1 carries the
+              section's identity alone. */}
           <h1
-            style={{ animationDelay: "80ms" }}
-            className="v3-hero-rise mt-4 max-w-[600px] text-[40px] font-semibold leading-[1.04] tracking-tight text-slate-900 sm:text-[52px] lg:text-[60px]"
+            style={{ animationDelay: "0ms" }}
+            className="v3-hero-rise max-w-[600px] text-[40px] font-semibold leading-[1.04] tracking-tight text-slate-900 sm:text-[52px] lg:text-[60px]"
           >
             Should you use an energy broker?
           </h1>
