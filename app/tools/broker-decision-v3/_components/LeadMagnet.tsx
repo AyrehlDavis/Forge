@@ -30,7 +30,7 @@ interface LeadMagnetProps {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type Status = "idle" | "submitting" | "success" | "error" | "skipped";
+type Status = "idle" | "submitting" | "success" | "error";
 
 // Track-specific asset names + body lines. Read by the PDF preview card and
 // the email-subject microcopy below the form.
@@ -90,10 +90,20 @@ function marketLabelFromStates(codes: string[]): string {
   return "Mixed market";
 }
 
+// Scales cleanly across single-, two-, and multi-state portfolios so the
+// rendered titles + subject lines don't end up with awkward stacked words
+// like "2-state portfolio market snapshot". Used wherever the kit copy
+// interpolates a market name.
+//   0     → "your state"
+//   1     → "Texas"
+//   2     → "Texas + Pennsylvania"
+//   3+    → "3-state"
 function primaryStateLabel(codes: string[]): string {
   if (codes.length === 0) return "your state";
   if (codes.length === 1) return getStateName(codes[0]);
-  return `${codes.length}-state portfolio`;
+  if (codes.length === 2)
+    return `${getStateName(codes[0])} + ${getStateName(codes[1])}`;
+  return `${codes.length}-state`;
 }
 
 function buildChips(inputs: V3Inputs): string[] {
@@ -114,7 +124,6 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  if (status === "skipped") return null;
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -152,45 +161,48 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
 
   return (
     <section aria-label="Take the recommendation with you">
+      {/* Simplified meeting kit per Ayrehl's img #53 + #54 synthesis:
+          single eyebrow + big title + PDF thumbnail alongside chips + form.
+          No nested "WHAT ARRIVES" eyebrow, no PREPARED FOR line, no inline
+          Download PDF link — those were the duplicated content layer. */}
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
         Your meeting kit
       </p>
-      <h3 className="mt-1.5 text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
-        Maximize the value of your next energy contract.
+      <h3 className="mt-2 text-[18px] font-semibold leading-snug text-slate-900 sm:text-[20px]">
+        {asset.title} + {stateName} market snapshot
       </h3>
 
       {voucher && <Voucher voucher={voucher} />}
 
-      {/* Personalization chips — echo of the chip-trail. Proof we used every answer. */}
-      {chips.length > 0 && (
-        <ul
-          aria-label="Personalization details used"
-          className="mt-4 flex flex-wrap gap-2"
-        >
-          {chips.map((chip) => (
-            <li
-              key={chip}
-              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700"
+      {/* PDF thumbnail + chips row — thumbnail gives the artifact a visual,
+          chips prove the personalization. No nested DeliverableCard. */}
+      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-[120px_1fr] sm:items-start sm:gap-5">
+        <div className="flex justify-center sm:justify-start" data-temp="magnet-deliverable-card">
+          <DeliverableLockup stateName={stateName} />
+        </div>
+        <div>
+          {chips.length > 0 && (
+            <ul
+              aria-label="Personalization details used"
+              className="flex flex-wrap gap-2"
             >
-              {chip}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* Unified deliverable card — meeting kit + market snapshot in a
-          single intentional surface. Visually light, no dense data rows. */}
-      <div className="mt-4">
-        <DeliverableCard
-          title={asset.title}
-          body={asset.body}
-          stateName={stateName}
-          spendLabel={inputs.spend ? SPEND_LABEL[inputs.spend] : null}
-          situationLabel={inputs.situation ? SITUATION_LABEL[inputs.situation] : null}
-        />
+              {chips.map((chip) => (
+                <li
+                  key={chip}
+                  className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700"
+                >
+                  {chip}
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            {asset.body}
+          </p>
+        </div>
       </div>
 
-      <p className="mt-4 text-sm font-semibold leading-6 text-slate-900">
+      <p className="mt-5 text-sm font-semibold leading-6 text-slate-900">
         We won&apos;t call you from this form.{" "}
         <span className="font-medium text-slate-600">
           Reply if you want help with the numbers.
@@ -216,15 +228,15 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
             }}
             disabled={status === "submitting"}
             aria-invalid={!!validationError}
-            aria-describedby={validationError ? "lead-email-error lead-privacy" : "lead-privacy lead-subject"}
-            className={`flex-1 rounded-full border bg-white px-5 py-3 text-base text-slate-900 placeholder:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 transition-colors ${
+            aria-describedby={validationError ? "lead-email-error lead-subject" : "lead-subject"}
+            className={`flex-1 rounded-[8px] border bg-white px-4 py-2.5 text-[15px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 transition-colors ${
               validationError ? "border-red-400" : "border-slate-200"
             }`}
           />
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="v3-pill-primary inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap px-6 text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
+            className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-[8px] bg-[#006bc5] px-6 text-sm font-semibold text-white shadow-[0_1px_2px_rgba(0,107,197,0.3)] transition-colors hover:bg-[#0058a3] disabled:bg-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
           >
             {status === "submitting" ? (
               <>
@@ -241,13 +253,6 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
               </>
             )}
           </button>
-          <button
-            type="button"
-            onClick={() => setStatus("skipped")}
-            className="inline-flex h-12 items-center justify-center whitespace-nowrap rounded-full border border-slate-300 bg-white px-5 text-sm font-medium text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
-          >
-            No thanks
-          </button>
         </div>
         {validationError && (
           <p id="lead-email-error" className="text-sm text-red-600" role="alert">
@@ -260,10 +265,6 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
           data-temp="magnet-subject-preview"
         >
           {subjectLine}
-        </p>
-        <p id="lead-privacy" className="text-xs leading-relaxed text-slate-500">
-          One email. We won&apos;t sell your address. The email includes a
-          one-click unsubscribe.
         </p>
         {status === "error" && (
           <div className="mt-1 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
@@ -315,61 +316,6 @@ function SuccessState() {
         </p>
       </div>
     </div>
-  );
-}
-
-// Unified deliverable card — meeting kit + market snapshot together in one
-// intentional surface. Visually light: a single small artifact-and-state
-// lockup on the left, the asset title + "prepared from" line on the right.
-// No data rows, no multi-thumb peeks, no source-attribution lines — those
-// were a previous direction; this version strips back to one quiet card.
-function DeliverableCard({
-  title,
-  body,
-  stateName,
-  spendLabel,
-  situationLabel,
-}: {
-  title: string;
-  body: string;
-  stateName: string;
-  spendLabel: string | null;
-  situationLabel: string | null;
-}) {
-  const preparedFor = [stateName, spendLabel, "11–50 sites", situationLabel]
-    .filter((s): s is string => Boolean(s))
-    .join(" · ");
-
-  return (
-    <article
-      data-temp="magnet-deliverable-card"
-      className="overflow-hidden rounded-[10px] border border-slate-200 bg-white"
-    >
-      <div className="grid grid-cols-1 gap-5 p-5 sm:grid-cols-[120px_1fr] sm:items-center sm:gap-6 sm:p-6">
-        <div className="flex justify-center sm:justify-start">
-          <DeliverableLockup stateName={stateName} />
-        </div>
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#006bc5]">
-            What arrives in your inbox
-          </p>
-          <h4 className="mt-2 text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
-            {title} + {stateName} market snapshot
-          </h4>
-          <p className="mt-2 text-sm leading-6 text-slate-600">{body}</p>
-          <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-slate-500">
-            Prepared for: {preparedFor}
-          </p>
-          <button
-            type="button"
-            className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[#006bc5] underline-offset-4 transition-colors hover:text-arise-800 hover:underline focus:outline-none focus-visible:underline"
-          >
-            <span aria-hidden>↓</span>
-            Download PDF
-          </button>
-        </div>
-      </div>
-    </article>
   );
 }
 

@@ -69,7 +69,7 @@ export function FaqSection() {
           <div className="flex items-end justify-between gap-4">
             <div className="max-w-[760px]">
               <p className="label-section">Common questions</p>
-              <h2 className="mt-4 text-[30px] font-medium leading-[1.1] tracking-[-0.018em] text-[#0A1F1F] sm:text-[36px] lg:text-[42px]">
+              <h2 className="mt-4 text-balance text-[30px] font-medium leading-[1.1] tracking-[-0.018em] text-[#0A1F1F] sm:text-[36px] lg:text-[42px]">
                 Before you start.
               </h2>
             </div>

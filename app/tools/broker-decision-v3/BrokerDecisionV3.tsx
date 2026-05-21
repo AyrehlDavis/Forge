@@ -51,11 +51,27 @@ export function BrokerDecisionV3() {
   }, []);
 
   return (
-    <section id="broker-check" className="relative pb-16 pt-2 sm:pb-20 sm:pt-2 lg:pb-24 lg:pt-4">
+    <section id="broker-check" className="relative pb-10 pt-2 sm:pb-12 sm:pt-2 lg:pb-12 lg:pt-4">
       <div className="relative mx-auto max-w-[1184px] px-5 sm:px-8">
         {phase === "form" && (
-          <div className="mx-auto max-w-[820px] rounded-[20px] border border-white/60 bg-white/55 p-4 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-6 lg:p-8">
-            <SmartForm onChange={setFormInputs} onSubmit={handleSubmit} />
+          <div className="mx-auto max-w-[820px]">
+            {/* Tool framing — signals "this is the tool" so the form doesn't
+                read as just another card. Left-aligned to match all other
+                section headers on the page. */}
+            <div className="mb-6 sm:mb-8">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
+                The check · 5 questions
+              </p>
+              <h2 className="mt-3 text-balance text-[28px] font-semibold leading-[1.1] tracking-[-0.022em] text-slate-900 sm:text-[32px] lg:text-[36px]">
+                Find your <span className="text-[#006bc5]">move</span>.
+              </h2>
+              <p className="mt-2 max-w-[440px] text-[14px] leading-6 text-slate-600 sm:text-[15px]">
+                Use a broker, go direct, or stick with your local utility — answer five questions to see what fits.
+              </p>
+            </div>
+            <div className="rounded-[20px] border border-white/60 bg-white/55 p-4 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-6 lg:p-8">
+              <SmartForm onChange={setFormInputs} onSubmit={handleSubmit} />
+            </div>
           </div>
         )}
 

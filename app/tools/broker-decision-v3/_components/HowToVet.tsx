@@ -10,7 +10,7 @@ export function HowToVet() {
           {/* Eyebrow dropped per V3.5 typography pass — H2 owns the section
               without a label. Stepped tracking + tightened leading at lg
               gives the editorial gravity. */}
-          <h2 className="text-[44px] font-semibold leading-[1.02] tracking-[-0.032em] text-[#0A1F1F] sm:text-[60px] sm:leading-[0.98] lg:text-[76px] lg:tracking-[-0.04em]">
+          <h2 className="text-balance text-[44px] font-semibold leading-[1.02] tracking-[-0.032em] text-[#0A1F1F] sm:text-[60px] sm:leading-[0.98] lg:text-[76px] lg:tracking-[-0.04em]">
             Don&apos;t sign until you ask these questions.
           </h2>
           <p className="mt-7 max-w-[720px] text-[18px] leading-[1.7] text-slate-600 sm:text-[20px]">

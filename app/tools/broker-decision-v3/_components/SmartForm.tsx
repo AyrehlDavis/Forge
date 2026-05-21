@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SelectionCard } from "./SelectionCard";
 import { StateMap } from "./StateMap";
 import {
@@ -168,6 +168,19 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
   const isLastStep = step === STEP_COUNT;
   const currentMeta = STEPS[step - 1];
 
+  // Track the disabled→enabled transition on the Next button so we can
+  // trigger a subtle scale pulse the moment the user completes a step.
+  // The animation key flips each time stepComplete becomes true so React
+  // re-applies the class.
+  const prevCompleteRef = useRef(stepComplete);
+  const [pulseKey, setPulseKey] = useState(0);
+  useEffect(() => {
+    if (stepComplete && !prevCompleteRef.current) {
+      setPulseKey((k) => k + 1);
+    }
+    prevCompleteRef.current = stepComplete;
+  }, [stepComplete]);
+
   function goNext() {
     if (!stepComplete) return;
     if (isLastStep) {
@@ -192,11 +205,11 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
       onSubmit={handleSubmit}
       noValidate
       aria-label="Portfolio details"
-      className="space-y-8"
+      className="space-y-5"
     >
       <ChipTrail step={step} total={STEP_COUNT} inputs={inputs} onEdit={setStep} />
 
-      <fieldset className="border-0 p-0">
+      <fieldset key={step} className="v3-step-rise border-0 p-0">
         <legend className="block text-base font-semibold leading-snug text-slate-900 sm:text-lg">
           {currentMeta.question}
         </legend>
@@ -204,7 +217,7 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
           <p className="mt-1.5 text-xs leading-5 text-slate-600 sm:text-sm sm:leading-6">{currentMeta.helper}</p>
         )}
 
-        <div className="mt-6">
+        <div className="mt-5">
           {step === 1 && (
             <div
               role="radiogroup"
@@ -294,10 +307,11 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
           Back
         </button>
         <button
+          key={pulseKey}
           type="button"
           onClick={goNext}
           disabled={!stepComplete}
-          className="v3-pill-primary inline-flex h-12 items-center justify-center gap-2 px-6 text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
+          className={`v3-pill-primary inline-flex h-12 items-center justify-center gap-2 px-6 text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 ${stepComplete && pulseKey > 0 ? "v3-cta-enable" : ""}`}
         >
           {isLastStep ? "See my recommendation" : "Next"}
           <span aria-hidden>→</span>
@@ -342,7 +356,7 @@ function ChipTrail({
           key={index}
           type="button"
           onClick={() => onEdit(index)}
-          className="group relative flex flex-col items-start gap-0.5 rounded-[10px] border border-slate-200 bg-white/80 px-2.5 py-1.5 text-left shadow-[0_1px_0_rgba(15,23,42,0.04)] transition-all hover:border-arise-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
+          className="v3-chip-enter group relative flex flex-col items-start gap-0.5 rounded-[10px] border border-slate-200 bg-white/80 px-2.5 py-1.5 text-left shadow-[0_1px_0_rgba(15,23,42,0.04)] transition-all hover:border-arise-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
           aria-label={`${facts.short}: ${facts.answer}. Edit.`}
         >
           <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">

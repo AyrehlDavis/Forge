@@ -6,16 +6,16 @@ import { RenewalWindowCard } from "./RenewalWindowCard";
 // ordered argument, not two parallel cards.
 export function WhyThisMatters() {
   return (
-    <section className="py-14 sm:py-16 lg:py-20">
+    <section className="py-10 sm:py-12 lg:py-12">
       <div className="mx-auto max-w-[1184px] px-5 sm:px-8">
         <div className="max-w-[640px]">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
             Why this matters
           </p>
-          <h2 className="mt-3 text-[34px] font-semibold leading-[1.08] tracking-[-0.022em] text-slate-900 sm:text-[40px] lg:text-[48px]">
+          <h2 className="mt-3 text-balance text-[34px] font-semibold leading-[1.08] tracking-[-0.022em] text-slate-900 sm:text-[40px] lg:text-[48px]">
             The lowest rate can still cost you.
           </h2>
-          <p className="mt-3 max-w-[560px] text-[15px] leading-7 text-slate-600">
+          <p className="mt-3 max-w-[560px] text-pretty text-[15px] leading-7 text-slate-600">
             Two things the headline number doesn&apos;t tell you — sketched
             out the way a real buyer would actually see them.
           </p>

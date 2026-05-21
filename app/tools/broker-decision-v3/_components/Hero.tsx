@@ -9,7 +9,7 @@ export function Hero() {
               section's identity alone. */}
           <h1
             style={{ animationDelay: "0ms" }}
-            className="v3-hero-rise max-w-[600px] text-[40px] font-semibold leading-[1.04] tracking-tight text-slate-900 sm:text-[52px] lg:text-[60px]"
+            className="v3-hero-rise max-w-[600px] text-balance text-[40px] font-semibold leading-[1.04] tracking-tight text-slate-900 sm:text-[52px] lg:text-[60px]"
           >
             Should you use an energy broker?
           </h1>

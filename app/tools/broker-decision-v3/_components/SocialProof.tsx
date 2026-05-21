@@ -9,7 +9,7 @@ export function SocialProof() {
       <div className="mx-auto max-w-[1184px] px-5 sm:px-8">
         <div className="max-w-[640px]">
           <p className="label-artifact">Supplier bid stack</p>
-          <h2 className="mt-3 text-[30px] font-semibold leading-[1.1] tracking-[-0.018em] text-slate-900 sm:text-[34px] lg:text-[40px]">
+          <h2 className="mt-3 text-balance text-[30px] font-semibold leading-[1.1] tracking-[-0.018em] text-slate-900 sm:text-[34px] lg:text-[40px]">
             Look past the quote.
           </h2>
           <p className="mt-3 max-w-[560px] text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">

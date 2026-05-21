@@ -30,7 +30,7 @@ export function BrokerTransparency() {
       <div className="mx-auto max-w-[1184px] px-5 sm:px-8">
         <div className="max-w-[760px]">
           <p className="label-section">Transparency</p>
-          <h2 className="mt-3 text-[30px] font-semibold leading-[1.1] tracking-[-0.018em] text-slate-900 sm:text-[34px] lg:text-[40px]">
+          <h2 className="mt-3 text-balance text-[30px] font-semibold leading-[1.1] tracking-[-0.018em] text-slate-900 sm:text-[34px] lg:text-[40px]">
             Is your broker working for you, the supplier, or themselves?
           </h2>
           <p className="mt-3 max-w-[560px] text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
