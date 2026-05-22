@@ -81,9 +81,9 @@ const SITUATION_RAIL: Record<NonNullable<V3Inputs["situation"]>, string> = {
   always_in_market: "CONTINUOUS",
 };
 const TRACK_RAIL: Record<Track, string> = {
-  A_use_broker: "TRACK A",
-  B_go_direct: "TRACK B",
-  C_regulated: "TRACK C",
+  A_use_broker: "USE A BROKER",
+  B_go_direct: "GO DIRECT",
+  C_regulated: "LOCAL UTILITY",
 };
 
 function buildMetadataRail(inputs: V3Inputs, track: Track): string {
@@ -273,6 +273,9 @@ export function ResultCard({ result, onReset, magnet }: ResultCardProps) {
           <button
             type="button"
             data-temp="check-risk-plan-target"
+            onClick={() => {
+              document.getElementById("cta")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
             className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5] transition-colors hover:text-arise-800 focus:outline-none focus-visible:underline"
           >
             <span aria-hidden>→</span>

@@ -43,11 +43,15 @@ export function Hero() {
  */
 function HeroArtifact() {
   return (
-    <div
-      aria-hidden
-      style={{ animationDelay: "120ms" }}
-      className="v3-hero-rise relative mx-auto w-full max-w-[520px] rounded-[20px] border border-white/60 bg-white/55 p-8 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-10"
-    >
+    <>
+      <span className="sr-only">
+        Preview of three possible paths: use a broker, go direct, or use local utility.
+      </span>
+      <div
+        aria-hidden
+        style={{ animationDelay: "120ms" }}
+        className="v3-hero-rise relative mx-auto w-full max-w-[520px] rounded-[20px] border border-white/60 bg-white/55 p-8 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-10"
+      >
       <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-arise-700">
         Three possible paths
       </p>
@@ -64,7 +68,8 @@ function HeroArtifact() {
       <p className="mt-6 text-xs leading-5 text-slate-500">
         No upsell — you may end up at &ldquo;you don&apos;t need us right now.&rdquo;
       </p>
-    </div>
+      </div>
+    </>
   );
 }
 

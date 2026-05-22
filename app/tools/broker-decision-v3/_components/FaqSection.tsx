@@ -36,7 +36,7 @@ const FAQS: Faq[] = [
         No we are not in the business to share data and have a tight policy
         around this{" "}
         <a
-          href="#"
+          href="/privacy"
           data-temp="faq-privacy-policy-link"
           className="text-[#006bc5] underline-offset-4 hover:underline focus:outline-none focus-visible:underline"
         >

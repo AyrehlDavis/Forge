@@ -335,7 +335,7 @@ function DeliverableLockup({ stateName }: { stateName: string }) {
         <div className="absolute inset-x-0 top-0 h-[3px] bg-[#007fe8]" />
         <div className="flex h-full flex-col justify-between px-4 pb-4 pt-5">
           <div>
-            <p className="text-[7px] font-semibold uppercase tracking-[0.18em] text-[#007fe8]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#007fe8]">
               Broker meeting kit
             </p>
             <p className="mt-2 text-[11px] font-semibold leading-[1.15] tracking-tight text-slate-900">
@@ -348,7 +348,7 @@ function DeliverableLockup({ stateName }: { stateName: string }) {
             </div>
           </div>
           <div className="flex items-end justify-between gap-2">
-            <p className="text-[7px] uppercase tracking-[0.14em] text-slate-400">
+            <p className="text-[11px] uppercase tracking-[0.14em] text-slate-400">
               ~9 pp · Letter
             </p>
             <svg
