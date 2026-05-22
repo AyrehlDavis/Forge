@@ -76,8 +76,11 @@ export async function GET(request: Request) {
 
   const state = await readState();
 
-  // Fetch messages newer than lastProcessedTs (exclusive via oldest+1us)
-  const oldest = state.lastProcessedTs;
+  // Optional ?since=<unix-ts> override for backfill / manual catch-up. Doesn't
+  // persist to state (so the regular cron continues from its current cursor).
+  const url0 = new URL(request.url);
+  const sinceOverride = url0.searchParams.get("since");
+  const oldest = sinceOverride || state.lastProcessedTs;
   const url = new URL("https://slack.com/api/conversations.history");
   url.searchParams.set("channel", channelId);
   url.searchParams.set("oldest", oldest);
