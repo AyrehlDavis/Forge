@@ -68,11 +68,11 @@ export const PRIORITY_OPTIONS: Array<SelectionOption<Priority>> = [
   {
     value: "budget_certainty",
     label: "Budget certainty",
-    descriptor: "Lock in a clear price — predictable budget over a clear move.",
+    descriptor: "Lock in a clear price — predictable budget for the foreseeable future.",
   },
   {
     value: "handled_for_me",
-    label: "Little effort",
+    label: "I want a partner",
     descriptor: "Hands off. I want Arise to watch the market and tell me when to act.",
   },
   {

@@ -51,28 +51,28 @@ export function BrokerDecisionV3() {
   }, []);
 
   return (
-    <section id="broker-check" className="relative pb-10 pt-2 sm:pb-12 sm:pt-2 lg:pb-12 lg:pt-4">
+    <section id="broker-check" className="relative pb-14 pt-14 sm:pb-16 sm:pt-16 lg:pb-20 lg:pt-20">
       <div className="relative mx-auto max-w-[1184px] px-5 sm:px-8">
         {phase === "form" && (
-          <div className="mx-auto max-w-[820px]">
-            {/* Tool framing — signals "this is the tool" so the form doesn't
-                read as just another card. Left-aligned to match all other
-                section headers on the page. */}
-            <div className="mb-6 sm:mb-8">
+          <>
+            {/* Section header — at the page's left rail, matches every other
+                section header on the page. */}
+            <div className="mb-6 max-w-[760px] sm:mb-8">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
                 The check · 5 questions
               </p>
-              <h2 className="mt-3 text-balance text-[28px] font-semibold leading-[1.1] tracking-[-0.022em] text-slate-900 sm:text-[32px] lg:text-[36px]">
+              <h2 className="mt-3 text-balance text-[34px] font-semibold leading-[1.06] tracking-[-0.025em] text-slate-900 sm:text-[44px] lg:text-[52px]">
                 Find your <span className="text-[#006bc5]">move</span>.
               </h2>
-              <p className="mt-2 max-w-[440px] text-[14px] leading-6 text-slate-600 sm:text-[15px]">
-                Use a broker, go direct, or stick with your local utility — answer five questions to see what fits.
+              <p className="mt-4 max-w-[560px] text-[14px] leading-6 text-slate-600 sm:text-[15px] sm:leading-7">
+                Broker, direct, or local utility — and the math behind the call. No email required.
               </p>
             </div>
-            <div className="rounded-[20px] border border-white/60 bg-white/55 p-4 shadow-[0_24px_64px_-16px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-6 lg:p-8">
+
+            <div className="mx-auto max-w-[820px] rounded-[24px] border border-white/60 bg-white/55 p-5 shadow-[0_8px_32px_-12px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-xl backdrop-saturate-150 sm:p-8 lg:p-10">
               <SmartForm onChange={setFormInputs} onSubmit={handleSubmit} />
             </div>
-          </div>
+          </>
         )}
 
         {phase === "analyzing" && <Interstitial />}
@@ -88,3 +88,4 @@ export function BrokerDecisionV3() {
     </section>
   );
 }
+

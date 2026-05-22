@@ -14,9 +14,8 @@ interface Stat {
 
 const STATS: Stat[] = [
   { value: "700+", label: "businesses served", tempKey: "stat-businesses" },
-  { value: "22", label: "active suppliers", tempKey: "stat-suppliers" },
+  { value: "20+", label: "active suppliers", tempKey: "stat-suppliers" },
   { value: "35", label: "markets covered", tempKey: "stat-markets" },
-  { value: "20+", label: "supplier relationships", tempKey: "stat-relationships" },
 ];
 
 export function StatStrip() {
@@ -26,7 +25,7 @@ export function StatStrip() {
       className="relative pb-6 pt-2 sm:pb-8 sm:pt-4 lg:pb-10 lg:pt-6"
     >
       <div className="mx-auto max-w-[1184px] px-5 sm:px-8">
-        <ol className="grid grid-cols-2 gap-x-6 gap-y-5 border-y border-slate-200/70 py-5 sm:gap-x-8 sm:py-6 lg:grid-cols-4 lg:gap-x-12">
+        <ol className="grid grid-cols-3 gap-x-6 gap-y-5 border-y border-slate-200/70 py-5 sm:gap-x-8 sm:py-6 lg:gap-x-12">
           {STATS.map((s) => (
             <li
               key={s.tempKey}

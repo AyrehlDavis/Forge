@@ -23,6 +23,7 @@ import type {
 interface SmartFormProps {
   onChange: (input: V3Inputs) => void;
   onSubmit: (input: V3Inputs) => void;
+  onStepChange?: (step: number) => void;
 }
 
 const EMPTY: V3Inputs = {
@@ -141,14 +142,13 @@ function chipFor(step: number, inputs: V3Inputs): ChipFacts | null {
   }
 }
 
-const SIGNAL_TONE_CLASS: Record<SignalTone, string> = {
-  cyan: "text-[#0e7490]",
-  indigo: "text-[#4F5CB8]",
-};
-
-export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
+export function SmartForm({ onChange, onSubmit, onStepChange }: SmartFormProps) {
   const [inputs, setInputs] = useState<V3Inputs>(EMPTY);
   const [step, setStep] = useState(1);
+
+  useEffect(() => {
+    onStepChange?.(step);
+  }, [step, onStepChange]);
 
   const broadcast = useCallback(
     (next: V3Inputs) => {
@@ -207,11 +207,15 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
       aria-label="Portfolio details"
       className="space-y-5"
     >
-      <ChipTrail step={step} total={STEP_COUNT} inputs={inputs} onEdit={setStep} />
-
       <fieldset key={step} className="v3-step-rise border-0 p-0">
-        <legend className="block text-base font-semibold leading-snug text-slate-900 sm:text-lg">
-          {currentMeta.question}
+        <legend className="flex w-full items-baseline justify-between gap-4 text-xl font-semibold leading-snug text-slate-900 sm:text-2xl">
+          <span>{currentMeta.question}</span>
+          <span
+            aria-hidden
+            className="shrink-0 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-slate-400"
+          >
+            {String(step).padStart(2, "0")} / {String(STEP_COUNT).padStart(2, "0")}
+          </span>
         </legend>
         {currentMeta.helper && (
           <p className="mt-1.5 text-xs leading-5 text-slate-600 sm:text-sm sm:leading-6">{currentMeta.helper}</p>
@@ -222,7 +226,7 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
             <div
               role="radiogroup"
               aria-label="Number of locations"
-              className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
             >
               {LOCATION_OPTIONS.map((o) => (
                 <SelectionCard
@@ -244,7 +248,7 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
             <div
               role="radiogroup"
               aria-label="Annual energy spend"
-              className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
             >
               {SPEND_OPTIONS.map((o) => (
                 <SelectionCard
@@ -262,7 +266,7 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
             <div
               role="radiogroup"
               aria-label="Top priority"
-              className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
             >
               {PRIORITY_OPTIONS.map((o) => (
                 <SelectionCard
@@ -280,7 +284,7 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
             <div
               role="radiogroup"
               aria-label="Situation"
-              className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
             >
               {SITUATION_OPTIONS.map((o) => (
                 <SelectionCard
@@ -295,6 +299,10 @@ export function SmartForm({ onChange, onSubmit }: SmartFormProps) {
           )}
         </div>
       </fieldset>
+
+      {step > 1 && (
+        <ChipTrail step={step} total={STEP_COUNT} inputs={inputs} onEdit={setStep} />
+      )}
 
       <div className="flex flex-col-reverse items-stretch gap-3 border-t border-slate-200/70 pt-6 sm:flex-row sm:items-center sm:justify-between">
         <button
@@ -343,12 +351,13 @@ function ChipTrail({
     const facts = chipFor(i, inputs);
     if (facts) chips.push({ index: i, facts });
   }
-  const currentMeta = STEPS[step - 1];
+
+  if (chips.length === 0) return null;
 
   return (
     <div
       role="group"
-      aria-label={`Step ${step} of ${total}. Previously answered: ${chips.length}.`}
+      aria-label={`Previously answered: ${chips.length} of ${total - 1}.`}
       className="flex flex-wrap items-stretch gap-2"
     >
       {chips.map(({ index, facts }) => (
@@ -356,34 +365,23 @@ function ChipTrail({
           key={index}
           type="button"
           onClick={() => onEdit(index)}
-          className="v3-chip-enter group relative flex flex-col items-start gap-0.5 rounded-[10px] border border-slate-200 bg-white/80 px-2.5 py-1.5 text-left shadow-[0_1px_0_rgba(15,23,42,0.04)] transition-all hover:border-arise-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
+          className="v3-chip-enter group relative inline-flex items-baseline gap-1.5 rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-left transition-all hover:border-arise-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
           aria-label={`${facts.short}: ${facts.answer}. Edit.`}
         >
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+          <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-400">
             {facts.short}
           </span>
-          <span className="text-[13px] font-semibold leading-tight text-slate-900">
+          <span className="text-[12px] font-medium leading-tight text-slate-700">
             {facts.answer}
-          </span>
-          <span className={`text-[11px] font-medium leading-tight ${SIGNAL_TONE_CLASS[facts.tone]}`}>
-            {facts.signal}
           </span>
           <span
             aria-hidden
-            className="absolute right-1.5 top-1.5 text-[10px] text-slate-300 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+            className="text-[10px] text-slate-300 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
           >
             ✎
           </span>
         </button>
       ))}
-      <div className="flex flex-col items-start gap-0.5 rounded-[10px] border border-dashed border-[#006bc5]/60 bg-arise-50/60 px-2.5 py-1.5">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#006bc5]">
-          {currentMeta.short} · step {step} of {total}
-        </span>
-        <span className="text-[13px] font-semibold leading-tight text-slate-900">
-          In progress…
-        </span>
-      </div>
     </div>
   );
 }
