@@ -359,12 +359,82 @@ export async function notifyAtrium(
   }
 }
 
+// Post a threaded reply in Slack with the parsed classification. Requires the
+// bot to have `chat:write` scope (added in a follow-up reinstall). Falls back
+// silently if the scope is missing or the token is unset — the parse result
+// still lives in console.log.
+const URGENCY_EMOJI: Record<ParsedFeedback["urgency"], string> = {
+  blocking: "🔴",
+  iteration: "🟡",
+  "nice-to-have": "🟢",
+};
+const CLASS_EMOJI: Record<ParsedFeedback["classification"], string> = {
+  copy: "✏️",
+  layout: "📐",
+  color: "🎨",
+  behavior: "⚙️",
+  question: "❓",
+  praise: "🎉",
+};
+
+export async function postSlackReply(
+  channelId: string,
+  threadTs: string,
+  parsed: ParsedFeedback,
+): Promise<void> {
+  const token = process.env.SLACK_BOT_TOKEN;
+  if (!token) {
+    console.warn("[feedback] SLACK_BOT_TOKEN unset — skipping Slack reply");
+    return;
+  }
+
+  const cEmoji = CLASS_EMOJI[parsed.classification] || "";
+  const uEmoji = URGENCY_EMOJI[parsed.urgency] || "";
+  const affected = parsed.affected_files?.length
+    ? `\n*Likely affected:* \`${parsed.affected_files.join("`, `")}\``
+    : "";
+
+  const text =
+    `${cEmoji} *${parsed.classification}* · ${uEmoji} *${parsed.urgency}*\n` +
+    `*Summary:* ${parsed.summary}\n` +
+    `*Suggested action:* ${parsed.suggested_action}${affected}\n` +
+    `_— Arise Feedback (Claude Opus 4.7)_`;
+
+  try {
+    const resp = await fetch("https://slack.com/api/chat.postMessage", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({
+        channel: channelId,
+        thread_ts: threadTs,
+        text,
+        unfurl_links: false,
+        unfurl_media: false,
+      }),
+    });
+    const result = (await resp.json()) as { ok: boolean; error?: string };
+    if (!result.ok) {
+      console.warn(
+        "[feedback] postSlackReply failed:",
+        result.error,
+        "— if 'missing_scope', the bot needs `chat:write` reinstalled.",
+      );
+    }
+  } catch (err) {
+    console.warn("[feedback] postSlackReply error:", err);
+  }
+}
+
 // Process a Slack message through the full pipeline. Used by both the Events
 // API webhook route and the polling cron. Returns parsed result or null if
 // skipped (e.g. no comment body).
 export async function processSlackMessage(
   msg: SlackMessage,
   source: "slack-events" | "slack-poll",
+  opts?: { channelId?: string; replyInThread?: boolean },
 ): Promise<{ parsed: ParsedFeedback; logPath: string } | null> {
   const extracted = extractCommentFromSlack(msg);
   if (!extracted.text) return null;
@@ -410,6 +480,14 @@ export async function processSlackMessage(
     ? logPath
     : path.relative(process.cwd(), logPath);
   await notifyAtrium(parsed, logRelPath);
+
+  // Reply in the Slack thread so reviewers see the classification inline,
+  // not buried in Vercel logs. Best-effort — fails silently if chat:write
+  // scope hasn't been granted yet.
+  const channelId = opts?.channelId || process.env.SLACK_CHANNEL_ID;
+  if ((opts?.replyInThread ?? true) && channelId && msg.ts) {
+    await postSlackReply(channelId, msg.ts, parsed);
+  }
 
   return { parsed, logPath };
 }
