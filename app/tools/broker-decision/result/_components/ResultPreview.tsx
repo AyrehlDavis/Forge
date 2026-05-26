@@ -1,31 +1,24 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AnswersSummary } from "../../_components/AnswersSummary";
-import { EmailCapture } from "../../_components/EmailCapture";
-import { Results } from "../../_components/Results";
-import type { RecommendationInput, RecommendationOutput } from "../../_lib/types";
+import { LeadMagnet } from "../../../broker-decision-v3/_components/LeadMagnet";
+import { ResultCard } from "../../../broker-decision-v3/_components/ResultCard";
+import type { V3Inputs, V3Recommendation } from "../../../broker-decision-v3/_lib/types";
 
 interface ResultPreviewProps {
-  input: RecommendationInput;
-  result: RecommendationOutput;
+  result: V3Recommendation;
+  inputs: V3Inputs;
 }
 
-export function ResultPreview({ input, result }: ResultPreviewProps) {
+export function ResultPreview({ result, inputs }: ResultPreviewProps) {
   const router = useRouter();
-  const goToQuestionnaire = () => router.push("/tools/broker-decision");
+  const onReset = () => router.push("/tools/broker-decision-v3");
 
   return (
-    <div className="space-y-8">
-      <AnswersSummary
-        input={input}
-        onEdit={goToQuestionnaire}
-        onStartOver={goToQuestionnaire}
-      />
-      <Results
-        result={result}
-        emailCapture={<EmailCapture result={result} input={input} />}
-      />
-    </div>
+    <ResultCard
+      result={result}
+      onReset={onReset}
+      magnet={<LeadMagnet result={result} inputs={inputs} />}
+    />
   );
 }
