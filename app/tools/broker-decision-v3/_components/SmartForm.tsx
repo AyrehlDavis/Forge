@@ -301,7 +301,9 @@ export function SmartForm({ onChange, onSubmit, onStepChange }: SmartFormProps) 
       </fieldset>
 
       {step > 1 && (
-        <ChipTrail step={step} total={STEP_COUNT} inputs={inputs} onEdit={setStep} />
+        <div className="hidden sm:block">
+          <ChipTrail step={step} total={STEP_COUNT} inputs={inputs} onEdit={setStep} />
+        </div>
       )}
 
       <div className="flex flex-col-reverse items-stretch gap-3 border-t border-slate-200/70 pt-4 sm:flex-row sm:items-center sm:justify-between">
