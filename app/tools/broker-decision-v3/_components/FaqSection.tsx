@@ -19,7 +19,7 @@ const FAQS: Faq[] = [
   },
   {
     q: "Why would an energy broker tell me when not to use them?",
-    a: "We're a broker we make money when you sign a contract through us. We're also part of Constellation, the largest competitive supplier in the U.S. Telling you the honest answer (even when it's \"go direct\") builds the kind of trust that wins business over time. Bad advice doesn't.",
+    a: "We're a broker — we make money when you sign a contract through us. Telling you the honest answer (even when it's \"go direct\") builds the kind of trust that wins business over time. Bad advice doesn't.",
   },
   {
     q: "How accurate is the recommendation?",

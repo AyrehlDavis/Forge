@@ -12,7 +12,7 @@ interface LineItem {
 const LINE_ITEMS: LineItem[] = [
   { label: "Generation (the rate you saw)", amount: "$0.0742 / kWh", tempKey: "bill-generation" },
   { label: "Transmission", amount: "+$0.0118 / kWh", tempKey: "bill-transmission", hidden: true },
-  { label: "Distribution", amount: "+$0.0184 / kWh", tempKey: "bill-distribution", hidden: true },
+  { label: "Capacity", amount: "+$0.0184 / kWh", tempKey: "bill-distribution", hidden: true },
   { label: "Riders & adjustments", amount: "+$0.0061 / kWh", tempKey: "bill-riders", hidden: true },
 ];
 
