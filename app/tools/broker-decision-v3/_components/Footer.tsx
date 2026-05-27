@@ -29,7 +29,7 @@ export function Footer() {
             </a>
           </li>
           <li>
-            <a className="inline-flex min-h-11 items-center transition-colors hover:text-[#006bc5]" href="#cta">
+            <a className="inline-flex min-h-11 items-center transition-colors hover:text-[#006bc5]" href="https://ariseenergy.com/get-in-touch" target="_blank" rel="noopener noreferrer">
               Contact
             </a>
           </li>

@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const DRAWER_LINKS = [
-  { href: "#broker-check", label: "How it works" },
-  { href: "#how-to-vet", label: "What to ask" },
-  { href: "#faq", label: "FAQ" },
+const NAV_LINKS = [
+  { href: "https://ariseenergy.com/how-it-works", label: "How it works" },
+  { href: "https://ariseenergy.com/about", label: "About" },
+  { href: "https://ariseenergy.com/our-process", label: "Our process" },
+  { href: "https://ariseenergy.com/pricewatch", label: "PriceWatch" },
 ];
 
 export function SiteHeader() {
@@ -81,26 +82,21 @@ export function SiteHeader() {
 
         {/* Inline nav — sm+ only. MP6: canonical focus rings on nav links. */}
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 sm:flex">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
+            >
+              {link.label}
+            </a>
+          ))}
           <a
-            className="rounded transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
-            href="#broker-check"
-          >
-            How it works
-          </a>
-          <a
-            className="rounded transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
-            href="#how-to-vet"
-          >
-            What to ask
-          </a>
-          <a
-            className="rounded transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
-            href="#faq"
-          >
-            FAQ
-          </a>
-          <a
-            href="#cta"
+            href="https://ariseenergy.com/get-in-touch"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex h-11 items-center rounded-[10px] bg-[#006bc5] px-5 text-xs font-semibold text-white shadow-[0_2px_6px_-1px_rgba(0,107,197,0.4)] transition-colors hover:bg-[#0058a3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
           >
             Talk to us
@@ -110,7 +106,9 @@ export function SiteHeader() {
         {/* Mobile cluster — MP8: CTA h-11 (44px); MP7: hamburger h-11 w-11 (44px). */}
         <div className="flex items-center gap-2 sm:hidden">
           <a
-            href="#cta"
+            href="https://ariseenergy.com/get-in-touch"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex h-11 items-center rounded-[10px] bg-[#006bc5] px-4 text-xs font-semibold text-white shadow-[0_2px_6px_-1px_rgba(0,107,197,0.4)] transition-colors hover:bg-[#0058a3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
           >
             Talk to us
@@ -141,10 +139,12 @@ export function SiteHeader() {
           className="border-b border-white/60 bg-white/55 backdrop-blur-xl backdrop-saturate-150 sm:hidden"
         >
           <ul className="mx-auto flex max-w-[1184px] flex-col px-5 py-2">
-            {DRAWER_LINKS.map((link) => (
+            {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={closeMenu}
                   className="block rounded py-3 text-sm font-medium text-slate-600 transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
                 >

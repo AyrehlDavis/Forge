@@ -21,7 +21,9 @@ export function CtaBand() {
             with a real person — by phone or video, whenever works.
           </p>
           <a
-            href="mailto:hello@arise.com"
+            href="https://ariseenergy.com/get-in-touch"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-[10px] bg-[#006bc5] px-7 text-[15px] font-semibold text-white shadow-[0_6px_20px_-4px_rgba(0,107,197,0.45)] transition-colors hover:bg-[#0058a3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
           >
             Talk to an advisor

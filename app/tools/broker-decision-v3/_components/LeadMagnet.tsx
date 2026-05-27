@@ -270,7 +270,7 @@ function RegulatedContactCard() {
         We don&apos;t build market snapshots for regulated states. If your utility&apos;s tariff response leaves gaps, reach out and we&apos;ll help you parse it.
       </p>
       <a
-        href="https://ariseenergy.com/contact"
+        href="https://ariseenergy.com/get-in-touch"
         className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5] transition-colors hover:text-arise-800 focus:outline-none focus-visible:underline"
       >
         <span aria-hidden>→</span>
