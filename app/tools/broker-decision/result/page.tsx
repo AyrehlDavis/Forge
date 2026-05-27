@@ -49,11 +49,29 @@ export default function ResultsReviewPage() {
                 key={slug}
                 id={slug}
                 aria-label={fixture.label}
-                className="relative mx-auto max-w-[1184px] px-5 sm:px-8 pb-16 pt-10 scroll-mt-6"
+                className="relative pb-16 pt-6 scroll-mt-0"
               >
-                <SectionHeader fixture={fixture} />
-                <div className="mt-6">
-                  <ResultPreview result={result} inputs={fixture.input} />
+                {/* Sticky track-label banner — stays visible as Chris scrolls
+                    through a long result so he always knows which track this
+                    section is. */}
+                <div className="sticky top-0 z-20 -mt-px border-y border-slate-200/70 bg-white/85 backdrop-blur-md">
+                  <div className="mx-auto flex max-w-[1184px] items-baseline gap-3 px-5 py-3 sm:px-8">
+                    <span
+                      className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#006bc5]"
+                      style={{ letterSpacing: "0.18em" }}
+                    >
+                      {fixture.slug.replace("-", " ")}
+                    </span>
+                    <span className="text-[13px] font-semibold text-slate-900 sm:text-[15px]">
+                      {fixture.label}
+                    </span>
+                  </div>
+                </div>
+                <div className="mx-auto max-w-[1184px] px-5 sm:px-8 pt-6">
+                  <SectionDescription fixture={fixture} />
+                  <div className="mt-6">
+                    <ResultPreview result={result} inputs={fixture.input} />
+                  </div>
                 </div>
               </section>
             );
@@ -91,22 +109,15 @@ function IntroBanner() {
   );
 }
 
-function SectionHeader({
+function SectionDescription({
   fixture,
 }: {
   fixture: (typeof TRACK_FIXTURES)[keyof typeof TRACK_FIXTURES];
 }) {
   return (
-    <div className="border-l-4 border-[#006bc5] pl-4">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
-        {fixture.slug}
-      </p>
-      <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-        {fixture.label}
-      </h2>
-      <p className="mt-1 max-w-[760px] text-sm text-slate-600 leading-relaxed">
-        {fixture.description}
-      </p>
-    </div>
+    <p className="max-w-[760px] text-sm text-slate-600 leading-relaxed">
+      <span className="font-semibold text-slate-900">Fixture inputs: </span>
+      {fixture.description}
+    </p>
   );
 }
