@@ -162,123 +162,88 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
     );
   }
 
+  const personalizedBody = result.track === "A_use_broker"
+    ? `Nine negotiation strategies plus your ${stateName} market snapshot. Calibrated to your portfolio.`
+    : `Nine strategies for a clean direct buy — plus your ${stateName} market snapshot. Calibrated to your portfolio.`;
+
   return (
     <section aria-label="Take the recommendation with you">
-      {/* Simplified meeting kit per Ayrehl's img #53 + #54 synthesis:
-          single eyebrow + big title + PDF thumbnail alongside chips + form.
-          No nested "WHAT ARRIVES" eyebrow, no PREPARED FOR line, no inline
-          Download PDF link — those were the duplicated content layer. */}
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
-        Your meeting kit
-      </p>
-      <h3 className="mt-2 text-[18px] font-semibold leading-snug text-slate-900 sm:text-[20px]">
-        {asset.title} + {stateName} market snapshot
-      </h3>
-
-      {voucher && <Voucher voucher={voucher} />}
-
-      {/* PDF thumbnail + chips row — thumbnail gives the artifact a visual,
-          chips prove the personalization. No nested DeliverableCard. */}
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-[120px_1fr] sm:items-start sm:gap-5">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-[140px_1fr] sm:items-start">
         <div className="flex justify-center sm:justify-start" data-temp="magnet-deliverable-card">
           <DeliverableLockup stateName={stateName} />
         </div>
         <div>
-          {chips.length > 0 && (
-            <ul
-              aria-label="Personalization details used"
-              className="flex flex-wrap gap-2"
-            >
-              {chips.map((chip) => (
-                <li
-                  key={chip}
-                  className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700"
-                >
-                  {chip}
-                </li>
-              ))}
-            </ul>
-          )}
-          <p className="mt-3 text-sm leading-6 text-slate-600">
-            {asset.body}
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5]">
+            We made this for you
           </p>
+          <h3 className="mt-1.5 text-[18px] font-semibold leading-snug text-slate-900 sm:text-[20px]">
+            Your 9-page meeting kit + your market snapshot
+          </h3>
+          <p className="mt-2 text-[15px] leading-6 text-slate-600">
+            {personalizedBody}
+          </p>
+
+          {voucher && <Voucher voucher={voucher} />}
+
+          <form onSubmit={handleSubmit} noValidate className="mt-4 flex flex-col gap-2.5">
+            <label htmlFor="lead-email" className="sr-only">
+              Work email address
+            </label>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <input
+                id="lead-email"
+                type="email"
+                name="email"
+                inputMode="email"
+                autoComplete="email"
+                placeholder="name@company.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (validationError) setValidationError(null);
+                }}
+                disabled={status === "submitting"}
+                aria-invalid={!!validationError}
+                aria-describedby={validationError ? "lead-email-error lead-subject" : "lead-subject"}
+                className={`flex-1 rounded-[8px] border bg-white px-4 py-2.5 text-[15px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 transition-colors ${
+                  validationError ? "border-red-400" : "border-slate-200"
+                }`}
+              />
+              <button
+                type="submit"
+                disabled={status === "submitting"}
+                className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-[8px] bg-[#006bc5] px-6 text-sm font-semibold text-white shadow-[0_1px_2px_rgba(0,107,197,0.3)] transition-colors hover:bg-[#0058a3] disabled:bg-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
+              >
+                {status === "submitting" ? (
+                  <>
+                    <span
+                      aria-hidden
+                      className="inline-block h-3 w-3 rounded-full border-2 border-white border-t-transparent animate-spin"
+                    />
+                    Sending
+                  </>
+                ) : (
+                  "Email it to me"
+                )}
+              </button>
+            </div>
+            {validationError && (
+              <p id="lead-email-error" className="text-sm text-red-600" role="alert">
+                {validationError}
+              </p>
+            )}
+            {status === "error" && (
+              <div className="mt-1 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                Something went wrong.{" "}
+                <button type="submit" className="font-medium underline hover:no-underline">
+                  Try again
+                </button>
+                , or reach out to us.
+              </div>
+            )}
+          </form>
         </div>
       </div>
-
-      <p className="mt-5 text-sm font-semibold leading-6 text-slate-900">
-        We won&apos;t call you from this form.{" "}
-        <span className="font-medium text-slate-600">
-          Reply if you want help with the numbers.
-        </span>
-      </p>
-
-      <form onSubmit={handleSubmit} noValidate className="mt-3 flex flex-col gap-2.5">
-        <label htmlFor="lead-email" className="sr-only">
-          Work email address
-        </label>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <input
-            id="lead-email"
-            type="email"
-            name="email"
-            inputMode="email"
-            autoComplete="email"
-            placeholder="name@company.com"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (validationError) setValidationError(null);
-            }}
-            disabled={status === "submitting"}
-            aria-invalid={!!validationError}
-            aria-describedby={validationError ? "lead-email-error lead-subject" : "lead-subject"}
-            className={`flex-1 rounded-[8px] border bg-white px-4 py-2.5 text-[15px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 transition-colors ${
-              validationError ? "border-red-400" : "border-slate-200"
-            }`}
-          />
-          <button
-            type="submit"
-            disabled={status === "submitting"}
-            className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-[8px] bg-[#006bc5] px-6 text-sm font-semibold text-white shadow-[0_1px_2px_rgba(0,107,197,0.3)] transition-colors hover:bg-[#0058a3] disabled:bg-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
-          >
-            {status === "submitting" ? (
-              <>
-                <span
-                  aria-hidden
-                  className="inline-block h-3 w-3 rounded-full border-2 border-white border-t-transparent animate-spin"
-                />
-                Sending
-              </>
-            ) : (
-              <>
-                Send them to me
-                <span aria-hidden>→</span>
-              </>
-            )}
-          </button>
-        </div>
-        {validationError && (
-          <p id="lead-email-error" className="text-sm text-red-600" role="alert">
-            {validationError}
-          </p>
-        )}
-        <p
-          id="lead-subject"
-          className="text-xs leading-5 text-slate-500"
-          data-temp="magnet-subject-preview"
-        >
-          {subjectLine}
-        </p>
-        {status === "error" && (
-          <div className="mt-1 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-            Something went wrong.{" "}
-            <button type="submit" className="font-medium underline hover:no-underline">
-              Try again
-            </button>
-            , or reach out to us.
-          </div>
-        )}
-      </form>
     </section>
   );
 }

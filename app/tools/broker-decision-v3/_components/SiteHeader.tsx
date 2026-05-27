@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const DRAWER_LINKS = [
   { href: "#broker-check", label: "How it works" },
@@ -12,15 +12,54 @@ const DRAWER_LINKS = [
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
 
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+    hamburgerRef.current?.focus();
+  }, []);
+
+  // Focus first drawer link on open
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const firstLink = drawerRef.current?.querySelector<HTMLElement>("a");
+    requestAnimationFrame(() => firstLink?.focus());
+  }, [isMenuOpen]);
+
+  // ESC + focus trap
   useEffect(() => {
     if (!isMenuOpen) return;
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setIsMenuOpen(false);
+      if (e.key === "Escape") { closeMenu(); return; }
+      if (e.key !== "Tab" || !drawerRef.current) return;
+      const focusable = Array.from(
+        drawerRef.current.querySelectorAll<HTMLElement>("a[href]")
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isMenuOpen]);
+  }, [isMenuOpen, closeMenu]);
+
+  // Click-outside to close
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    function onPointerDown(e: PointerEvent) {
+      if (!(e.target as Element).closest?.("header")) closeMenu();
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [isMenuOpen, closeMenu]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/60 bg-white/55 shadow-[0_1px_0_rgba(255,255,255,0.85)_inset,0_8px_24px_-12px_rgba(15,23,42,0.08)] backdrop-blur-xl backdrop-saturate-150">
@@ -38,43 +77,54 @@ export function SiteHeader() {
             priority
             className="h-[42px] w-auto"
           />
-          <span className="text-sm font-normal text-slate-400">/ Forge</span>
+          {/* MP2: hide /Forge on mobile — frees ~50px to stop CTA wrapping at 375px */}
+          <span className="hidden text-sm font-normal text-slate-400 sm:inline">/ Forge</span>
         </Link>
 
-        {/* Inline nav — sm+ only. Mobile gets the CTA + hamburger pair below. */}
+        {/* Inline nav — sm+ only. MP6: canonical focus rings on nav links. */}
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 sm:flex">
-          <a className="transition-colors hover:text-[#0A1F1F]" href="#broker-check">
+          <a
+            className="rounded transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
+            href="#broker-check"
+          >
             How it works
           </a>
-          <a className="transition-colors hover:text-[#0A1F1F]" href="#how-to-vet">
+          <a
+            className="rounded transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
+            href="#how-to-vet"
+          >
             What to ask
           </a>
-          <a className="transition-colors hover:text-[#0A1F1F]" href="#faq">
+          <a
+            className="rounded transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
+            href="#faq"
+          >
             FAQ
           </a>
           <a
             href="#cta"
-            className="inline-flex h-9 items-center rounded-[10px] bg-[#006bc5] px-5 text-xs font-semibold text-white shadow-[0_2px_6px_-1px_rgba(0,107,197,0.4)] transition-colors hover:bg-[#0058a3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
+            className="inline-flex h-11 items-center rounded-[10px] bg-[#006bc5] px-5 text-xs font-semibold text-white shadow-[0_2px_6px_-1px_rgba(0,107,197,0.4)] transition-colors hover:bg-[#0058a3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
           >
             Talk to us
           </a>
         </nav>
 
-        {/* Mobile cluster — Talk to us stays visible; hamburger opens drawer. */}
+        {/* Mobile cluster — MP8: CTA h-11 (44px); MP7: hamburger h-11 w-11 (44px). */}
         <div className="flex items-center gap-2 sm:hidden">
           <a
             href="#cta"
-            className="inline-flex h-9 items-center rounded-[10px] bg-[#006bc5] px-4 text-xs font-semibold text-white shadow-[0_2px_6px_-1px_rgba(0,107,197,0.4)] transition-colors hover:bg-[#0058a3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
+            className="inline-flex h-11 items-center rounded-[10px] bg-[#006bc5] px-4 text-xs font-semibold text-white shadow-[0_2px_6px_-1px_rgba(0,107,197,0.4)] transition-colors hover:bg-[#0058a3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
           >
             Talk to us
           </a>
           <button
+            ref={hamburgerRef}
             type="button"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
             aria-controls="site-header-mobile-drawer"
             onClick={() => setIsMenuOpen((v) => !v)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-white/60 bg-white/55 text-slate-700 backdrop-blur-md transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-[10px] border border-white/60 bg-white/55 text-slate-700 backdrop-blur-md transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
           >
             <span aria-hidden className="text-base leading-none">
               {isMenuOpen ? "✕" : "☰"}
@@ -83,8 +133,11 @@ export function SiteHeader() {
         </div>
       </div>
 
+      {/* MP3/MP4: focus trap + click-outside handled in useEffect above.
+          MP5: canonical ring focus pattern on drawer links. */}
       {isMenuOpen && (
         <nav
+          ref={drawerRef}
           id="site-header-mobile-drawer"
           aria-label="Mobile navigation"
           className="border-b border-white/60 bg-white/55 backdrop-blur-xl backdrop-saturate-150 sm:hidden"
@@ -94,8 +147,8 @@ export function SiteHeader() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block py-3 text-sm font-medium text-slate-600 transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:text-[#0A1F1F]"
+                  onClick={closeMenu}
+                  className="block rounded py-3 text-sm font-medium text-slate-600 transition-colors hover:text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2"
                 >
                   {link.label}
                 </a>

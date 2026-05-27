@@ -86,8 +86,10 @@ const TRACK_RAIL: Record<Track, string> = {
   C_regulated: "LOCAL UTILITY",
 };
 
+// TRACK_RAIL removed from metadata — the h2 carries the verdict.
+// Rail now shows context only: market + timing window.
 function buildMetadataRail(inputs: V3Inputs, track: Track): string {
-  const parts = [TRACK_RAIL[track]];
+  const parts: string[] = [];
   if (inputs.states.length === 1) {
     const s = getState(inputs.states[0]);
     if (s?.isDeregulated && s.code === "TX") parts.push("ERCOT");
@@ -96,7 +98,7 @@ function buildMetadataRail(inputs: V3Inputs, track: Track): string {
     parts.push(`${inputs.states.length} STATES`);
   }
   if (inputs.situation) parts.push(SITUATION_RAIL[inputs.situation]);
-  return parts.join(" · ");
+  return parts.length ? parts.join(" · ") : TRACK_RAIL[track];
 }
 
 // Source-stamp footer — transforms the card from feature-checklist to
@@ -149,102 +151,52 @@ export function ResultCard({ result, onReset, magnet }: ResultCardProps) {
       tabIndex={-1}
       aria-live="polite"
       aria-label={`Recommendation: ${result.trackLabel}`}
-      className="v3-verdict-rise overflow-hidden rounded-[16px] border border-slate-200 bg-white shadow-[0_8px_32px_rgba(15,23,42,0.04)] focus:outline-none"
+      className="v3-verdict-rise overflow-hidden rounded-[16px] border border-slate-200 bg-white shadow-[0_8px_32px_rgba(15,23,42,0.08)] focus:outline-none"
     >
-      {/* Verdict band — opening editorial block. 4px track-accent top rule
-          is the only color signal; typography carries the moment. Tighter
-          padding so the band introduces but doesn't dominate. */}
+      {/* Header — accent top border, headline left, time-saved right */}
       <header
         style={{ borderTopColor: accentColor }}
-        className="border-t-4 px-6 pb-7 pt-6 sm:px-8 sm:pb-8 sm:pt-7 lg:px-10"
+        className="border-t-4 px-6 pb-7 pt-6 sm:px-8 sm:pb-8 sm:pt-7 lg:px-10 lg:pt-8"
       >
-        <p
-          className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-500"
-          data-temp="verdict-metadata-rail"
-        >
-          {buildMetadataRail(result.inputs, result.track)}
-        </p>
-        <h2 className="mt-3 text-[28px] font-semibold leading-[1.05] tracking-tight text-slate-900 sm:text-[32px] lg:text-[40px]">
-          {result.trackLabel}
-        </h2>
-        <p className="mt-3 max-w-[520px] text-[15px] leading-relaxed text-slate-600">
-          {result.headline}
-        </p>
-        {result.timingChip && (
-          <p className="mt-4 inline-flex items-center gap-2 text-[13px] text-slate-500">
-            <span
-              aria-hidden
-              style={{ backgroundColor: accentColor }}
-              className="h-1.5 w-1.5 rounded-full"
-            />
-            {result.timingChip}
-          </p>
-        )}
-      </header>
-
-      {/* Body sections — separated by hairlines, not chrome. Each section
-          flows as typography, no nested cards. */}
-      <div className="px-6 sm:px-8 lg:px-10">
-        {/* Stat — two-column KPI panel with subtle arise-50 tint. Hours on
-            left, working-days on right. Pill strip below visualizes the
-            "days saved" literally. Caption full-width underneath. */}
-        <section
-          data-temp="result-stat-time-saved"
-          className="-mx-6 border-t border-slate-100 bg-arise-50/40 px-6 py-7 sm:-mx-8 sm:px-8 sm:py-8 lg:-mx-10 lg:px-10"
-        >
-          <div className="flex items-start justify-between gap-6">
-            <div>
-              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#006bc5]">
-                Decision time saved
+        <div className="flex items-start justify-between gap-8">
+          <div className="flex-1">
+            <h2 className="text-[28px] font-semibold leading-[1.05] tracking-tight text-slate-900 sm:text-[34px] lg:text-[40px]">
+              For this one,{" "}
+              <span style={{ color: accentColor }}>
+                {result.trackLabel.toLowerCase()}.
               </span>
-              <div className="mt-2 flex items-baseline gap-2">
+            </h2>
+            <p className="mt-4 max-w-[520px] text-[15px] leading-relaxed text-slate-600">
+              {result.headline}
+            </p>
+          </div>
+          {result.track === "A_use_broker" && (
+            <div className="shrink-0 pt-1 text-right">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Time saved
+              </span>
+              <div className="mt-1.5 flex items-baseline justify-end gap-1.5">
                 <span
-                  className="text-[36px] font-semibold leading-none tracking-[-0.02em] tabular-nums sm:text-[44px] lg:text-[52px]"
+                  className="text-[32px] font-semibold leading-none tracking-[-0.02em] tabular-nums sm:text-[36px]"
                   style={{ color: accentColor }}
                 >
                   ~{hours}
                 </span>
-                <span className="text-[15px] font-medium text-slate-600">
-                  hours
-                </span>
+                <span className="text-[13px] font-medium text-slate-600">hrs</span>
               </div>
             </div>
-            <div className="text-right">
-              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
-                ≈ Working days
-              </span>
-              <p className="mt-2 text-[36px] font-semibold leading-none tabular-nums text-slate-900 sm:text-[44px] lg:text-[52px]">
-                {workingDays(hours)}
-              </p>
-            </div>
-          </div>
-          <WorkingDaysStrip
-            days={Number(workingDays(hours))}
-            accentColor={accentColor}
-          />
-          <p className="mt-5 text-[14px] leading-relaxed text-slate-600">
-            {TIME_SAVED_SUBTEXT[result.track]}
-          </p>
-          <details className="mt-3 text-[12px] leading-5 text-slate-500">
-            <summary className="cursor-pointer font-medium text-slate-600 hover:text-[#006bc5]">
-              How we calculate this
-            </summary>
-            <p className="mt-2">
-              Base hours per track (20h broker / 6h direct / 12h regulated) ×
-              site-count factor (1–3.5) × spend factor (0.8–2.4), rounded to
-              the nearest 5. The factors scale the workload Arise absorbs as
-              your portfolio gets larger or more complex.
-            </p>
-          </details>
-        </section>
+          )}
+        </div>
+      </header>
 
-        {/* Why-trace — mono numbered signal rows, hairline between. */}
+      <div className="px-6 sm:px-8 lg:px-10">
+        {/* Numbered reasons — stacked label then body */}
         <section aria-label="Reasoning" className="border-t border-slate-100 py-2">
           <ol className="divide-y divide-slate-100">
             {result.whyBullets.map((b, i) => (
               <li
                 key={i}
-                className="grid grid-cols-[36px_1fr] gap-x-4 py-4"
+                className="grid grid-cols-[36px_1fr] gap-x-4 py-5"
               >
                 <span
                   className="label-number"
@@ -253,65 +205,33 @@ export function ResultCard({ result, onReset, magnet }: ResultCardProps) {
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <p className="text-[14px] leading-relaxed text-slate-600">
-                  <span className="font-semibold text-slate-900">
+                <div>
+                  <p className="text-[15px] font-semibold leading-snug text-slate-900">
                     {b.label.replace(/[.]\s*$/, "")}
-                  </span>
-                  <span aria-hidden> — </span>
-                  {b.body}
-                </p>
+                  </p>
+                  <p className="mt-1.5 text-[14px] leading-relaxed text-slate-600">
+                    {b.body}
+                  </p>
+                </div>
               </li>
             ))}
           </ol>
         </section>
 
-        {/* Presumptive close — V5 receipt-style mono-tracked pattern per
-            Ayrehl's pick. Elongated body (no max-w), uppercase mono eyebrow,
-            arrow-first uppercase mono text-link CTA. */}
-        <section
-          aria-labelledby="presumptive-close-heading"
-          className="border-t border-slate-100 py-7 sm:py-8"
-        >
-          <h3
-            id="presumptive-close-heading"
-            className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500"
-          >
-            What we&apos;d do
-          </h3>
-          <div className="mt-3 space-y-3 text-[15px] leading-[1.6] text-slate-700">
-            {result.presumptiveClose.body.split(/\n{2,}/).map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
-          </div>
-          <button
-            type="button"
-            data-temp="check-risk-plan-target"
-            onClick={() => {
-              document.getElementById("cta")?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-            className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5] transition-colors hover:text-arise-800 focus:outline-none focus-visible:underline"
-          >
-            <span aria-hidden>→</span>
-            {result.presumptiveClose.cta}
-          </button>
-        </section>
-
-        {/* Meeting-kit handoff — subtle arise-50 tint to give the conversion
-            zone visual weight without breaking the editorial register.
-            Negative margins break out to card edge so the bg fills the full
-            width; px re-applied to match body padding. */}
+        {/* Meeting-kit strip */}
         {magnet && (
           <section className="-mx-6 border-t border-slate-100 bg-arise-50/40 px-6 py-7 sm:-mx-8 sm:px-8 sm:py-8 lg:-mx-10 lg:px-10">
             {magnet}
           </section>
         )}
 
-        {/* Footer ladder + source stamp. */}
+        {/* Footer */}
         <div className="border-t border-slate-100 py-5">
           <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
             <a
               href="#how-to-vet"
-              className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-[#006bc5] underline-offset-4 transition-colors hover:underline focus:outline-none focus-visible:underline"
+              className="group inline-flex min-h-11 items-center gap-1.5 text-[13px] font-medium underline-offset-4 transition-colors hover:underline focus:outline-none focus-visible:underline"
+              style={{ color: accentColor }}
             >
               See questions to ask
               <span aria-hidden className="transition-transform duration-200 group-hover:translate-y-0.5">↓</span>
@@ -319,17 +239,11 @@ export function ResultCard({ result, onReset, magnet }: ResultCardProps) {
             <button
               type="button"
               onClick={onReset}
-              className="text-[12px] text-slate-500 underline-offset-2 transition-colors hover:text-slate-700 hover:underline focus:outline-none focus-visible:underline"
+              className="inline-flex min-h-11 items-center text-[12px] text-slate-500 underline-offset-2 transition-colors hover:text-slate-700 hover:underline focus:outline-none focus-visible:underline"
             >
               Edit my answers
             </button>
           </div>
-          <p
-            data-temp="result-source-stamp"
-            className="mt-3 max-w-[480px] font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400"
-          >
-            {buildSourceStamp(result.inputs)}
-          </p>
         </div>
       </div>
     </article>
@@ -398,21 +312,14 @@ function WorkingDaysStrip({
       className="mt-5 grid gap-1.5"
       style={{ gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))` }}
     >
-      {Array.from({ length: total }).map((_, i) => {
-        const isLast = i === total - 1;
-        return (
-          <li
-            key={i}
-            style={
-              isLast
-                ? { backgroundColor: accentColor }
-                : { backgroundColor: accentColor, opacity: 0.22 }
-            }
-            className="h-3.5 rounded-full"
-            aria-hidden
-          />
-        );
-      })}
+      {Array.from({ length: total }).map((_, i) => (
+        <li
+          key={i}
+          style={{ backgroundColor: accentColor }}
+          className="h-4 rounded-full opacity-80"
+          aria-hidden
+        />
+      ))}
     </ul>
   );
 }

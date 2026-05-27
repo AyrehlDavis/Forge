@@ -22,7 +22,7 @@ export function Hero() {
           <div style={{ animationDelay: "240ms" }} className="v3-hero-rise mt-7">
             <a
               href="#broker-check"
-              className="group inline-flex items-center gap-1.5 text-sm font-semibold text-[#006bc5] transition-colors hover:text-arise-800 focus:outline-none focus-visible:underline motion-safe:transition-all"
+              className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-[#006bc5] transition-colors hover:text-arise-800 focus:outline-none focus-visible:underline motion-safe:transition-all"
             >
               Start the check
               <span aria-hidden className="transition-transform duration-200 group-hover:translate-y-0.5">↓</span>
@@ -65,9 +65,6 @@ function HeroArtifact() {
         <PathOrb hint="If you're in a regulated state" label="Local Utility" tone="neutral" delay={440} />
       </div>
 
-      <p className="mt-6 text-xs leading-5 text-slate-500">
-        No upsell — you may end up at &ldquo;you don&apos;t need us right now.&rdquo;
-      </p>
       </div>
     </>
   );

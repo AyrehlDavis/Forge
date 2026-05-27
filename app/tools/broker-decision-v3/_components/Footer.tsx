@@ -19,17 +19,17 @@ export function Footer() {
         </p>
         <ul className="flex flex-wrap gap-x-6 gap-y-2 text-xs">
           <li>
-            <a className="transition-colors hover:text-[#006bc5]" href="/privacy">
+            <a className="inline-flex min-h-11 items-center transition-colors hover:text-[#006bc5]" href="/privacy">
               Privacy
             </a>
           </li>
           <li>
-            <a className="transition-colors hover:text-[#006bc5]" href="/terms">
+            <a className="inline-flex min-h-11 items-center transition-colors hover:text-[#006bc5]" href="/terms">
               Terms
             </a>
           </li>
           <li>
-            <a className="transition-colors hover:text-[#006bc5]" href="#cta">
+            <a className="inline-flex min-h-11 items-center transition-colors hover:text-[#006bc5]" href="#cta">
               Contact
             </a>
           </li>

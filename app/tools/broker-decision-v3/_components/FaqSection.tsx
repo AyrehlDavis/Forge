@@ -77,7 +77,7 @@ export function FaqSection() {
               type="button"
               onClick={toggleAll}
               aria-pressed={allOpen}
-              className="shrink-0 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:border-[#007fe8] hover:text-[#006bc5] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
+              className="inline-flex min-h-11 shrink-0 items-center rounded-full border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-700 transition-colors hover:border-[#007fe8] hover:text-[#006bc5] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2 motion-safe:transition-all"
             >
               {allOpen ? "Collapse all" : "Expand all"}
             </button>
@@ -91,7 +91,7 @@ export function FaqSection() {
                 key={f.q}
                 className="group border-b border-slate-200 py-5 last:border-b-0"
               >
-                <summary className="flex cursor-pointer list-none items-start justify-between gap-4 rounded text-base font-semibold text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 rounded text-base font-semibold text-[#0A1F1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#006bc5] focus-visible:ring-offset-2">
                   <span>{f.q}</span>
                   <span
                     aria-hidden

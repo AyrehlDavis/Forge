@@ -72,7 +72,8 @@ export function SupplierBidStack() {
         <span className="text-[10px] uppercase tracking-[0.14em] text-slate-400">sample</span>
       </header>
 
-      <div className="overflow-x-auto">
+      <div className="relative">
+        <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead>
             <tr className="border-b border-slate-200 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-slate-500">
@@ -121,6 +122,9 @@ export function SupplierBidStack() {
             ))}
           </tbody>
         </table>
+        </div>
+        {/* MP11: right-edge fade signals horizontal scroll on mobile */}
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white to-transparent" />
       </div>
       <p className="border-t border-slate-100 px-6 py-3 text-xs leading-5 text-slate-500 sm:px-8">
         Supplier A wins on rate, loses on the all-in. This is the comparison

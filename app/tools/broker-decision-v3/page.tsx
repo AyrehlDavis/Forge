@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-b from-arise-50 via-white to-arise-50/60 text-[#0A1F1F]">
+    <div className="relative overflow-x-hidden bg-gradient-to-b from-arise-50 via-white to-arise-50/60 text-[#0A1F1F]">
       {/* Single page-level ambient orb — blue only, V1 recipe. */}
       <div
         aria-hidden
