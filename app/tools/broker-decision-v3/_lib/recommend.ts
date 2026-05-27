@@ -25,8 +25,8 @@ const SPEND_MIDPOINTS: Record<Spend, number> = {
 };
 
 const TIMING_CHIPS: Record<Situation, string> = {
-  shopping_now: "Urgent now — compare terms before signing.",
-  renewal_soon: "Urgent before your renewal window opens.",
+  shopping_now: "Urgent now — line up suppliers and lock in pricing.",
+  renewal_soon: "Urgent before your renewal window opens — identifying a broker immediately helps you capitalize on top market opportunities rather than rushing to react.",
   contract_6_plus_months: "Not urgent — use this time to watch the market.",
   always_in_market: "Always active — next move depends on which site is up first.",
 };
@@ -165,7 +165,7 @@ function buildHeadline(
   const mix = fmtStateMix(input, flags);
   switch (track) {
     case "A_use_broker":
-      return `For ${spend} across ${sites} in ${mix}, a broker earns its keep.`;
+      return `When scaling to ${sites} across ${mix} with a volume of ${spend}, navigating these markets warrants the expertise of a broker.`;
     case "B_go_direct":
       return `For ${sites} in ${mix}, you can handle this directly.`;
     case "C_regulated":
@@ -200,9 +200,9 @@ function buildWhy(
             : "A broker tracks the curves and structures the contract so you're not exposed to bad timing.",
         },
         {
-          label: "Total cost is the right comparison — not the headline rate.",
+          label: "Look beyond the headline rate — focus on total cost.",
           body:
-            "Brokers who show their fee math and the all-in number are the ones worth hiring.",
+            "A broker does far more than compare a stack of bids. The real value is uncovering hidden trade-offs between products, terms, and suppliers — the things that protect your bottom line.",
         },
       ];
     case "B_go_direct":
@@ -213,14 +213,14 @@ function buildWhy(
             "One or two calls to suppliers can get you a competitive direct contract.",
         },
         {
-          label: `At ${spend}, broker overhead is hard to justify.`,
+          label: "A broker adds expertise, but DIY is fully manageable here.",
           body:
-            "The savings a broker negotiates rarely outpace their fee at this scale.",
+            "While an expert broker can handle the heavy lifting, a hands-on buyer can easily navigate this scale independently.",
         },
         {
-          label: "Direct keeps the supplier relationship one conversation.",
+          label: "Bring Arise in as a second set of eyes.",
           body:
-            "Fewer people in the contract chain, fewer places for things to slip.",
+            "If you want a sanity check on a direct quote — pass-throughs, renewal terms, timing — send it over. We don't need to run the deal to help you sign a better one.",
         },
       ];
     case "C_regulated":

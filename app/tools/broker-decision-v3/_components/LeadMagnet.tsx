@@ -36,14 +36,14 @@ type Status = "idle" | "submitting" | "success" | "error";
 // the email-subject microcopy below the form.
 const TRACK_ASSET: Record<Track, { title: string; body: string; subject: string }> = {
   A_use_broker: {
-    title: "9 broker questions + score grid",
-    body: "A one-page call worksheet — good answers, red flags, and space to score three brokers.",
-    subject: "Your 9 broker questions",
+    title: "9 strategies + your market snapshot",
+    body: "Your portfolio-specific market snapshot plus 9 strategies for total-cost protection — what to do at the negotiation, not just what to ask.",
+    subject: "Your 9 strategies + market snapshot",
   },
   B_go_direct: {
-    title: "9 supplier-RFP questions",
-    body: "Use this to run a clean direct-to-supplier RFP — terms, fees, and the questions suppliers don't volunteer.",
-    subject: "Your 9 supplier-RFP questions",
+    title: "9 strategies + your market snapshot",
+    body: "Your portfolio-specific market snapshot plus 9 strategies for running a clean direct-to-supplier process — terms, fees, and timing.",
+    subject: "Your 9 strategies + market snapshot",
   },
   C_regulated: {
     title: "9 utility-program checkpoints",
@@ -124,6 +124,9 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [validationError, setValidationError] = useState<string | null>(null);
 
+  if (result.track === "C_regulated") {
+    return <RegulatedContactCard />;
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -276,6 +279,38 @@ export function LeadMagnet({ result, inputs, voucher }: LeadMagnetProps) {
           </div>
         )}
       </form>
+    </section>
+  );
+}
+
+/**
+ * Track C (regulated) — no market snapshot exists for regulated states, so the
+ * meeting-kit/email CTA doesn't apply. Replace with a direct Contact-us CTA per
+ * Chris's review note: "remove the meeting kit / email cta. I would put that
+ * link to the contact us."
+ */
+function RegulatedContactCard() {
+  return (
+    <section
+      aria-label="Contact Arise"
+      className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-5 sm:p-6"
+    >
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+        Need a second set of eyes?
+      </p>
+      <h3 className="mt-2 text-[18px] font-semibold leading-snug text-slate-900 sm:text-[20px]">
+        Talk to your utility first — we&apos;re here if you still have questions.
+      </h3>
+      <p className="mt-2 text-sm leading-6 text-slate-600">
+        We don&apos;t build market snapshots for regulated states. If your utility&apos;s tariff response leaves gaps, reach out and we&apos;ll help you parse it.
+      </p>
+      <a
+        href="https://ariseenergy.com/contact"
+        className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#006bc5] transition-colors hover:text-arise-800 focus:outline-none focus-visible:underline"
+      >
+        <span aria-hidden>→</span>
+        Contact Arise
+      </a>
     </section>
   );
 }

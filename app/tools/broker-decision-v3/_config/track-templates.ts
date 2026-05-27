@@ -55,8 +55,8 @@ const CLOSES: Record<Track, Record<PriorityKey, CloseTemplate>> = {
   A_use_broker: {
     balanced_price_risk: {
       body:
-        "Given you want a fair price without buying at the wrong time, we'd start with your invoices, current contracts, and usage data. Arise can help build that picture: sites, dates, load, contract terms, market timing. Then we'd compare brokers on total cost, fee clarity, supplier reach, and monitoring plan — not just the first rate shown. That view tells you which broker can manage risk across the whole term.",
-      cta: "Compare brokers",
+        "Given your goal is total cost protection, partnering with a broker ensures you don't navigate the market blind. Beyond authoring the RFP and reviewing bids, Arise delivers critical market timing — tracking volatility to ensure you execute when conditions are most favorable, rather than when your deadline dictates.\n\nWe analyze the full bill, uncovering hidden pass-through rules, early-termination fees, and structural terms that turn a cheap headline rate into an expensive contract. If you are already looking at a direct quote, send it to Arise; we will run it against our market benchmarks and timing data to ensure you are getting the right product and the best possible opportunity.",
+      cta: "Send your quote",
     },
     price_first: {
       body:
@@ -99,23 +99,23 @@ const CLOSES: Record<Track, Record<PriorityKey, CloseTemplate>> = {
   C_regulated: {
     balanced_price_risk: {
       body:
-        "Your markets sell power through the regulated utility, so there's nothing to bid out. The savings live in tariff structure, demand management, and efficiency upgrades. Arise can pull your tariff and usage, find the time-of-use or demand-response programs you qualify for, and lay out which moves pay back fastest.",
-      cta: "Review your tariff",
+        "Your markets sell power through the regulated utility — there's no supplier to shop. Contact your local utility and ask them to run a tariff analysis to confirm you're on the lowest-cost rate schedule for your usage profile.\n\nWe can help, but we wouldn't be compensated on this work. Working directly with the utility is the best option — and if you still have questions after, we're here.",
+      cta: "Contact your utility",
     },
     price_first: {
       body:
-        "Your states don't have supplier choice, so a lower rate isn't a thing to shop for. The cost lever is your tariff and your load profile. Send Arise a recent bill — we'll check whether you're on the right rate schedule, whether demand-response would pay, and where efficiency would shave the bill.",
-      cta: "Review your tariff",
+        "Your states don't have supplier choice, so a lower rate isn't a thing to shop for. Contact your local utility and ask them to run a tariff analysis — confirm you're on the right rate schedule for your load profile.\n\nIf you still have questions after the utility responds, we can help — but we wouldn't be compensated on this, so working directly with them is the right first move.",
+      cta: "Contact your utility",
     },
     budget_certainty: {
       body:
-        "In regulated markets, budget certainty comes from understanding your tariff and your demand profile, not from contract structure. Arise can pull your bills, model your year, and flag the months where demand charges spike. From there you have something to budget against — and the levers to flatten it.",
-      cta: "Model your year",
+        "In regulated markets, budget certainty comes from your tariff and your demand profile — not contract structure. Contact your local utility, request a tariff analysis, and ask about time-of-use or demand-response programs that flatten the months where charges spike.\n\nWe're here if you want a second set of eyes after that — but the utility is the right first stop.",
+      cta: "Contact your utility",
     },
     handled_for_me: {
       body:
-        "Send Arise your latest bills. We pull your tariff structure, model your usage, and identify whether time-of-use, demand-response, or an efficiency assessment would move the needle. You don't shop for power here — but you don't have to chase any of this either.",
-      cta: "Send your invoice",
+        "There's no supplier to shop in your states, so the first move is your local utility — ask them to run a tariff analysis and walk you through time-of-use, demand-response, or efficiency programs that pay back fastest.\n\nIf you'd rather not chase any of that, send Arise your latest bills. We don't get compensated on regulated-market work, but we'll point you in the right direction.",
+      cta: "Contact your utility",
     },
   },
 };

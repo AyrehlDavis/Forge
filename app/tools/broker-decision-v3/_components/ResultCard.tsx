@@ -225,6 +225,17 @@ export function ResultCard({ result, onReset, magnet }: ResultCardProps) {
           <p className="mt-5 text-[14px] leading-relaxed text-slate-600">
             {TIME_SAVED_SUBTEXT[result.track]}
           </p>
+          <details className="mt-3 text-[12px] leading-5 text-slate-500">
+            <summary className="cursor-pointer font-medium text-slate-600 hover:text-[#006bc5]">
+              How we calculate this
+            </summary>
+            <p className="mt-2">
+              Base hours per track (20h broker / 6h direct / 12h regulated) ×
+              site-count factor (1–3.5) × spend factor (0.8–2.4), rounded to
+              the nearest 5. The factors scale the workload Arise absorbs as
+              your portfolio gets larger or more complex.
+            </p>
+          </details>
         </section>
 
         {/* Why-trace — mono numbered signal rows, hairline between. */}
@@ -267,9 +278,11 @@ export function ResultCard({ result, onReset, magnet }: ResultCardProps) {
           >
             What we&apos;d do
           </h3>
-          <p className="mt-3 text-[15px] leading-[1.6] text-slate-700">
-            {result.presumptiveClose.body}
-          </p>
+          <div className="mt-3 space-y-3 text-[15px] leading-[1.6] text-slate-700">
+            {result.presumptiveClose.body.split(/\n{2,}/).map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
+          </div>
           <button
             type="button"
             data-temp="check-risk-plan-target"
