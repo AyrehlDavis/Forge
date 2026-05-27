@@ -226,7 +226,7 @@ export function SmartForm({ onChange, onSubmit, onStepChange }: SmartFormProps) 
             <div
               role="radiogroup"
               aria-label="Number of locations"
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2"
             >
               {LOCATION_OPTIONS.map((o) => (
                 <SelectionCard
@@ -248,7 +248,7 @@ export function SmartForm({ onChange, onSubmit, onStepChange }: SmartFormProps) 
             <div
               role="radiogroup"
               aria-label="Annual energy spend"
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2"
             >
               {SPEND_OPTIONS.map((o) => (
                 <SelectionCard
@@ -266,7 +266,7 @@ export function SmartForm({ onChange, onSubmit, onStepChange }: SmartFormProps) 
             <div
               role="radiogroup"
               aria-label="Top priority"
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2"
             >
               {PRIORITY_OPTIONS.map((o) => (
                 <SelectionCard
@@ -284,7 +284,7 @@ export function SmartForm({ onChange, onSubmit, onStepChange }: SmartFormProps) 
             <div
               role="radiogroup"
               aria-label="Situation"
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2"
             >
               {SITUATION_OPTIONS.map((o) => (
                 <SelectionCard
@@ -304,7 +304,7 @@ export function SmartForm({ onChange, onSubmit, onStepChange }: SmartFormProps) 
         <ChipTrail step={step} total={STEP_COUNT} inputs={inputs} onEdit={setStep} />
       )}
 
-      <div className="flex flex-col-reverse items-stretch gap-3 border-t border-slate-200/70 pt-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col-reverse items-stretch gap-3 border-t border-slate-200/70 pt-4 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
           onClick={goBack}

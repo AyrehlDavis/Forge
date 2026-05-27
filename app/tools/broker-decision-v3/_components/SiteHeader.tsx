@@ -77,8 +77,6 @@ export function SiteHeader() {
             priority
             className="h-[42px] w-auto"
           />
-          {/* MP2: hide /Forge on mobile — frees ~50px to stop CTA wrapping at 375px */}
-          <span className="hidden text-sm font-normal text-slate-400 sm:inline">/ Forge</span>
         </Link>
 
         {/* Inline nav — sm+ only. MP6: canonical focus rings on nav links. */}
