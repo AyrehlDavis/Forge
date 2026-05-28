@@ -61,7 +61,7 @@ function HeroArtifact() {
 
       <div className="mt-6 flex flex-col gap-3">
         <PathOrb hint="If your portfolio is complex" label="Use a broker" tone="primary" delay={280} />
-        <PathOrb hint="If energy cost isn't a priority" label="Go direct" tone="cyan" delay={360} />
+        <PathOrb hint="If your portfolio is straightforward" label="Go direct" tone="cyan" delay={360} />
         <PathOrb hint="If you're in a regulated state" label="Local Utility" tone="neutral" delay={440} />
       </div>
 
